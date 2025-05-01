@@ -10,10 +10,10 @@
 </head>
 <body class="galaxy"> <!-- Default theme -->
 
-  <!-- 🌌 Galaxy Background -->
+  <!-- 🌌 Background -->
   <canvas id="stars"></canvas>
 
-  <!-- 🔐 Login + Settings -->
+  <!-- 🔐 Login + Settings Panel -->
   <div id="loginScreen" class="panel">
     <h1>🎮 AD ARCADE</h1>
     <p>Enter your name and choose your journey</p>
@@ -36,18 +36,36 @@
       <option value="hard">Hard</option>
     </select>
 
+    <label>
+      <input type="checkbox" id="musicToggle" checked />
+      🎶 Music
+    </label>
+
     <button id="startGameBtn">🚀 Start Game</button>
     <button id="viewLeaderboardBtn">🏆 View Leaderboard</button>
   </div>
 
-  <!-- 🏆 Leaderboard -->
+  <!-- 🧲 Optional Booster Legend -->
+  <div id="boosterLegend" class="panel hidden">
+    <h3>Legendary Boosters</h3>
+    <ul>
+      <li>⬌ Wide Paddle</li>
+      <li>💚 Extra Life</li>
+      <li>❄️ Slow Ball</li>
+      <li>⚪⚪ Multi Ball</li>
+      <li>🔥 Fireball</li>
+    </ul>
+    <button onclick="document.getElementById('boosterLegend').classList.add('hidden')">Close</button>
+  </div>
+
+  <!-- 🏆 Leaderboard Panel -->
   <div id="leaderboardPanel" class="panel hidden">
     <h2>🏆 Top 10 Legends</h2>
     <ul id="leaderboardList"></ul>
     <button id="closeLeaderboardBtn">❌ Close</button>
   </div>
 
-  <!-- 🎮 Score & Game UI -->
+  <!-- 🎮 Game Info + Canvas -->
   <h2 id="gameTitle" class="hidden">AD Arcade - DX-Ball Revival</h2>
   <div id="scoreboard" class="hidden">
     <strong><span id="currentPlayer">Player</span></strong> |
@@ -56,7 +74,6 @@
     High Score: <span id="highscore">0</span>
   </div>
 
-  <!-- 🕹️ Game Canvas -->
   <canvas id="gameCanvas" width="800" height="600" class="hidden"></canvas>
 
   <!-- 📱 Mobile Controls -->
@@ -66,10 +83,16 @@
     <button id="enableTilt">📱 Enable Tilt</button>
   </div>
 
-  <!-- 🎬 Intro Text -->
-  <div id="introText">GET READY</div>
+  <!-- 🎬 Countdown -->
+  <div id="countdownOverlay" class="hidden">3</div>
 
-  <!-- 🧠 Game Engine -->
+  <!-- 🔊 Background Music -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="background.mp3" type="audio/mp3">
+    Your browser does not support audio.
+  </audio>
+
+  <!-- 🧠 Game Logic -->
   <script src="script.js"></script>
 </body>
 </html>
