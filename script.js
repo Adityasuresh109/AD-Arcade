@@ -36,7 +36,8 @@ let lives = 3;
 let highScore = localStorage.getItem('dxball_highscore') || 0;
 let leaderboard = JSON.parse(localStorage.getItem('adArcadeLeaderboard')) || [];
 let currentLevel = 'easy';
-let paddle, balls, bricks, powerUps, levelIndex = 0;
+let levelIndex = 0;
+let paddle, balls, bricks, powerUps;
 let ballSpeedMultiplier = 1.0;
 
 // Canvas setup
@@ -83,6 +84,10 @@ startGameBtn.addEventListener('click', () => {
     musicElement.pause();
   }
 
+  // ✅ FIX: Set initial level before starting game
+  currentLevel = 'easy';
+  levelIndex = 0;
+
   loginScreen.classList.add('hidden');
   document.getElementById('gameTitle').classList.remove('hidden');
   document.getElementById('scoreboard').classList.remove('hidden');
@@ -102,110 +107,103 @@ viewLeaderboardBtn.addEventListener('click', () => {
 closeLeaderboardBtn.addEventListener('click', () => {
   leaderboardPanel.classList.add('hidden');
 });
-// === Starfield Background ===
-const starCanvas = document.getElementById("stars");
-const starCtx = starCanvas.getContext("2d");
-starCanvas.width = window.innerWidth;
-starCanvas.height = window.innerHeight;
+// === Level Layouts ===
+const levels = {
+  easy:   [1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
+  medium: [1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0],
+  hard:   [1,1,1,1,1,1,1,1, 1,0,1,0,1,0,1,1, 1,1,0,1,0,1,1,1, 1,1,1,0,1,1,1,1, 1,1,1,1,1,1,1,1]
+};
 
-let stars = Array(100).fill().map(() => ({
-  x: Math.random() * starCanvas.width,
-  y: Math.random() * starCanvas.height,
-  radius: Math.random() * 1.5,
-  speed: 0.5 + Math.random()
-}));
+const brickConfig = {
+  colCount: 8,
+  rowCount: 5,
+  width: 75,
+  height: 20,
+  padding: 10,
+  offsetTop: 40,
+  offsetLeft: 35
+};
 
-function drawStars() {
-  starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-  starCtx.fillStyle = '#fff';
-  stars.forEach(star => {
-    star.y += star.speed;
-    if (star.y > starCanvas.height) {
-      star.y = 0;
-      star.x = Math.random() * starCanvas.width;
+const powerUpTypes = ["wide", "life", "slow", "multi", "fireball"];
+
+// === Init Game ===
+function initGame(levelName) {
+  score = 0;
+  lives = 3;
+  powerUps = [];
+  ballSpeedMultiplier = {
+    easy: 1.0,
+    medium: 1.3,
+    hard: 1.6
+  }[levelName];
+
+  paddle = {
+    height: 15,
+    width: 100,
+    x: (canvas.width - 100) / 2,
+    dx: 7,
+    movingLeft: false,
+    movingRight: false
+  };
+
+  balls = [{
+    x: paddle.x + paddle.width / 2,
+    y: canvas.height - paddle.height - 20,
+    dx: 4 * ballSpeedMultiplier,
+    dy: -4 * ballSpeedMultiplier,
+    radius: 10,
+    active: true,
+    stuck: true
+  }];
+
+  const layout = levels[levelName];
+  bricks = [];
+  for (let c = 0; c < brickConfig.colCount; c++) {
+    bricks[c] = [];
+    for (let r = 0; r < brickConfig.rowCount; r++) {
+      let idx = r * brickConfig.colCount + c;
+      bricks[c][r] = {
+        x: 0,
+        y: 0,
+        status: layout[idx],
+        hp: 1
+      };
     }
-    starCtx.beginPath();
-    starCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    starCtx.fill();
-  });
-  requestAnimationFrame(drawStars);
-}
-drawStars();
-
-// === Game State ===
-let playerName = '';
-let currentTheme = 'galaxy';
-let score = 0;
-let lives = 3;
-let highScore = localStorage.getItem('dxball_highscore') || 0;
-let leaderboard = JSON.parse(localStorage.getItem('adArcadeLeaderboard')) || [];
-let currentLevel = 'easy';
-let paddle, balls, bricks, powerUps, levelIndex = 0;
-let ballSpeedMultiplier = 1.0;
-
-// Canvas setup
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-// === DOM Elements ===
-const loginScreen = document.getElementById('loginScreen');
-const startGameBtn = document.getElementById('startGameBtn');
-const viewLeaderboardBtn = document.getElementById('viewLeaderboardBtn');
-const leaderboardPanel = document.getElementById('leaderboardPanel');
-const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
-const leaderboardList = document.getElementById('leaderboardList');
-const musicElement = document.getElementById("bgMusic");
-const restartBtn = document.getElementById("restartBtn");
-
-// === Leaderboard Functions ===
-function saveLeaderboard() {
-  localStorage.setItem('adArcadeLeaderboard', JSON.stringify(leaderboard));
-}
-
-function renderLeaderboard() {
-  leaderboardList.innerHTML = '';
-  const sorted = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
-  sorted.forEach((entry, i) => {
-    const li = document.createElement('li');
-    li.innerHTML = `#${i + 1} <strong>${entry.name}</strong> — ${entry.score} pts [${entry.theme}]`;
-    leaderboardList.appendChild(li);
-  });
-}
-
-// === UI Events ===
-startGameBtn.addEventListener('click', () => {
-  const nameInput = document.getElementById('playerName').value.trim();
-  if (!nameInput) return alert("Please enter your name.");
-  playerName = nameInput;
-  currentTheme = document.getElementById('themeSelect').value;
-  document.body.className = currentTheme;
-
-  if (document.getElementById('musicToggle').checked) {
-    musicElement.volume = 0.3;
-    musicElement.play().catch(e => console.warn("Music blocked:", e));
-  } else {
-    musicElement.pause();
   }
 
-  loginScreen.classList.add('hidden');
-  document.getElementById('gameTitle').classList.remove('hidden');
-  document.getElementById('scoreboard').classList.remove('hidden');
-  document.getElementById('gameCanvas').classList.remove('hidden');
-  document.querySelector('.mobile-controls').classList.remove('hidden');
-  document.getElementById('currentPlayer').textContent = playerName;
+  showCountdown(() => {
+    balls.forEach(b => b.stuck = false);
+    draw(); // Start game loop
+  });
+}
 
-  initGame(currentLevel);
-  updateUI();
-});
+function updateUI() {
+  document.getElementById("score").textContent = score;
+  document.getElementById("lives").textContent = lives;
+  document.getElementById("highscore").textContent = highScore;
+}
 
-viewLeaderboardBtn.addEventListener('click', () => {
-  leaderboardPanel.classList.remove('hidden');
-  renderLeaderboard();
-});
+// === Countdown Before Launch ===
+function showCountdown(callback) {
+  const countdownEl = document.getElementById("countdownOverlay");
+  let count = 3;
 
-closeLeaderboardBtn.addEventListener('click', () => {
-  leaderboardPanel.classList.add('hidden');
-});
+  countdownEl.classList.remove("hidden");
+  countdownEl.textContent = count;
+
+  const interval = setInterval(() => {
+    count--;
+    if (count > 0) {
+      countdownEl.textContent = count;
+    } else if (count === 0) {
+      countdownEl.textContent = "GO!";
+    } else {
+      clearInterval(interval);
+      countdownEl.classList.add("hidden");
+      if (callback) callback();
+    }
+  }, 700);
+}
 // === Game Loop ===
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -248,7 +246,7 @@ function draw() {
     ctx.shadowBlur = 12;
     ctx.fill();
 
-    // Draw icons on booster
+    // Draw icon inside the power-up
     ctx.fillStyle = "#000";
     ctx.font = "10px 'Press Start 2P'";
     ctx.textAlign = "center";
@@ -268,7 +266,7 @@ function draw() {
     }
   });
 
-  // Ball movement
+  // Ball Logic
   balls.forEach(ball => {
     if (ball.stuck) {
       ball.x = paddle.x + paddle.width / 2;
@@ -286,7 +284,7 @@ function draw() {
     ctx.fill();
     ctx.closePath();
 
-    // Wall collisions
+    // Wall collision
     if (ball.x < ball.radius || ball.x > canvas.width - ball.radius) ball.dx *= -1;
     if (ball.y < ball.radius) ball.dy *= -1;
 
@@ -339,7 +337,7 @@ function draw() {
       }
     }
 
-    // Ball loss
+    // Ball lost
     if (ball.y > canvas.height) ball.active = false;
   });
 
@@ -367,11 +365,11 @@ function draw() {
     }
   }
 
-  // Paddle movement
+  // Paddle Movement
   if (paddle.movingRight && paddle.x < canvas.width - paddle.width) paddle.x += paddle.dx;
   if (paddle.movingLeft && paddle.x > 0) paddle.x -= paddle.dx;
 
-  // Check win
+  // Check level complete
   const allBricksBroken = bricks.flat().every(b => b.status === 0);
   if (allBricksBroken) {
     levelIndex = (levelIndex + 1) % Object.keys(levels).length;
@@ -453,6 +451,7 @@ document.getElementById("leftBtn").addEventListener("touchstart", e => {
   paddle.movingLeft = true;
 });
 document.getElementById("leftBtn").addEventListener("touchend", () => paddle.movingLeft = false);
+
 document.getElementById("rightBtn").addEventListener("touchstart", e => {
   e.preventDefault();
   paddle.movingRight = true;
