@@ -12,10 +12,10 @@ body {
 /* === CANVAS === */
 #gameCanvas, #stars {
   position: relative;
-  z-index: 0;
+  z-index: 1;
   display: block;
   margin: 0 auto;
-  background-color: transparent;
+  background-color: #000;
 }
 
 /* === PANELS === */
