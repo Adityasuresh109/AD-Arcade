@@ -2,26 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AD Arcade 🎮</title>
+  <title>AD Arcade - Legendary Edition</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
   </style>
 </head>
-<body>
-  <!-- Parallax Starfield Background -->
+<body class="galaxy"> <!-- Default theme -->
+
+  <!-- 🌌 Dynamic Background Layer -->
   <canvas id="stars"></canvas>
 
-  <!-- Start Menu -->
-  <div id="startScreen">
+  <!-- 🔐 LOGIN & SETTINGS -->
+  <div id="loginScreen" class="panel">
     <h1>🎮 AD ARCADE</h1>
-    <p>Select your theme and level to begin!</p>
+    <p>Enter your name and choose your journey</p>
+
+    <label for="playerName">👤 Name:</label>
+    <input type="text" id="playerName" placeholder="Enter your name" required />
 
     <label for="themeSelect">🎨 Theme:</label>
     <select id="themeSelect">
       <option value="galaxy" selected>🌌 Galaxy</option>
       <option value="neon">🧠 Neon Grid</option>
-      <option value="ice">❄️ Ice Crystal</option>
+      <option value="ice">❄️ Ice Realm</option>
       <option value="inferno">🔥 Inferno</option>
     </select>
 
@@ -33,30 +37,39 @@
     </select>
 
     <button id="startGameBtn">🚀 Start Game</button>
+    <button id="viewLeaderboardBtn">🏆 View Leaderboard</button>
   </div>
 
-  <!-- Game UI -->
-  <h2 id="gameTitle">AD Arcade - DX-Ball Revival</h2>
-  <div id="scoreboard">
+  <!-- 🏆 LEADERBOARD PANEL -->
+  <div id="leaderboardPanel" class="panel hidden">
+    <h2>🏆 Top 10 Legends</h2>
+    <ul id="leaderboardList"></ul>
+    <button id="closeLeaderboardBtn">❌ Close</button>
+  </div>
+
+  <!-- 🎮 GAME TITLE + SCOREBAR -->
+  <h2 id="gameTitle" class="hidden">AD Arcade - DX-Ball Revival</h2>
+  <div id="scoreboard" class="hidden">
+    <strong><span id="currentPlayer">Player</span></strong> |
     Score: <span id="score">0</span> |
     Lives: <span id="lives">3</span> |
     High Score: <span id="highscore">0</span>
   </div>
 
-  <!-- Game Canvas -->
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <!-- 🎯 MAIN GAME CANVAS -->
+  <canvas id="gameCanvas" width="800" height="600" class="hidden"></canvas>
 
-  <!-- Controls -->
-  <div class="mobile-controls">
+  <!-- 📱 MOBILE CONTROLS -->
+  <div class="mobile-controls hidden">
     <button id="leftBtn">◀️</button>
     <button id="rightBtn">▶️</button>
     <button id="enableTilt">📱 Enable Tilt</button>
   </div>
 
-  <!-- Intro Text -->
+  <!-- 🎬 Intro Prompt -->
   <div id="introText">GET READY</div>
 
+  <!-- 🚀 JS ENGINE -->
   <script src="script.js"></script>
 </body>
 </html>
-
