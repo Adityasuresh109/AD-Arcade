@@ -170,13 +170,11 @@ function initGame(levelName) {
       };
     }
   }
-
   showCountdown(() => {
-    balls.forEach(b => b.stuck = false);
-    draw(); // Start game loop
-  });
+  balls.forEach(b => b.stuck = false);
+  requestAnimationFrame(draw);  // ← MAKE SURE THIS IS HERE
+});
 }
-
 function updateUI() {
   document.getElementById("score").textContent = score;
   document.getElementById("lives").textContent = lives;
