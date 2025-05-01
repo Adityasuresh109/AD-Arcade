@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +9,18 @@
   </style>
 </head>
 <body class="galaxy">
+
+  <!-- 🌌 Animated Background -->
   <canvas id="stars"></canvas>
+
+  <!-- 🎮 Login Panel -->
   <div id="loginScreen" class="panel">
     <h1>🎮 AD ARCADE</h1>
     <p>Enter your name and choose your journey</p>
+
     <label for="playerName">👤 Name:</label>
     <input type="text" id="playerName" placeholder="Enter your name" required />
+
     <label for="themeSelect">🎨 Theme:</label>
     <select id="themeSelect">
       <option value="galaxy" selected>🌌 Galaxy</option>
@@ -23,24 +28,31 @@
       <option value="ice">❄️ Ice Realm</option>
       <option value="inferno">🔥 Inferno</option>
     </select>
+
     <label for="levelSelect">🧱 Level:</label>
     <select id="levelSelect">
       <option value="easy" selected>Easy</option>
       <option value="medium">Medium</option>
       <option value="hard">Hard</option>
     </select>
+
     <label>
       <input type="checkbox" id="musicToggle" checked />
       🎶 Music
     </label>
+
     <button id="startGameBtn">🚀 Start Game</button>
     <button id="viewLeaderboardBtn">🏆 View Leaderboard</button>
   </div>
+
+  <!-- 🏆 Leaderboard Panel -->
   <div id="leaderboardPanel" class="panel hidden">
     <h2>🏆 Top 10 Legends</h2>
     <ul id="leaderboardList"></ul>
     <button id="closeLeaderboardBtn">❌ Close</button>
   </div>
+
+  <!-- 📊 Game Info -->
   <h2 id="gameTitle" class="hidden">AD Arcade - DX-Ball Revival</h2>
   <div id="scoreboard" class="hidden">
     <strong><span id="currentPlayer">Player</span></strong> |
@@ -48,17 +60,30 @@
     Lives: <span id="lives">3</span> |
     High Score: <span id="highscore">0</span>
   </div>
+
+  <!-- 🕹️ Game Canvas -->
   <canvas id="gameCanvas" width="800" height="600" class="hidden"></canvas>
+
+  <!-- 🎬 Countdown Overlay -->
+  <div id="countdownOverlay" class="hidden"></div>
+
+  <!-- 📱 Mobile Controls -->
   <div class="mobile-controls hidden">
     <button id="leftBtn">◀️</button>
     <button id="rightBtn">▶️</button>
     <button id="enableTilt">📱 Enable Tilt</button>
   </div>
-  <div id="countdownOverlay" class="hidden">3</div>
+
+  <!-- 🔊 Background Music -->
   <audio id="bgMusic" loop preload="auto">
-    <source src="background.mp3" type="audio/mp3">
+    <source src="background.mp3" type="audio/mp3" />
     Your browser does not support the audio element.
   </audio>
+
+  <!-- 🎯 Game Intro Text -->
+  <div id="introText">GET READY</div>
+
+  <!-- 💻 Game Script -->
   <script src="script.js"></script>
 </body>
 </html>
