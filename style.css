@@ -1,31 +1,37 @@
-
-/* === BASE & NO SELECTION FOR BUTTONS === */
+/* === BASE === */
 body {
   margin: 0;
   font-family: 'Press Start 2P', monospace;
   background: black;
+  color: white;
   overflow: hidden;
   text-align: center;
-  color: white;
 }
 
-.no-select {
+/* === NO TEXT SELECTION === */
+.no-select,
+#loginScreen label,
+#loginScreen button,
+#loginScreen input,
+#loginScreen select,
+.instructions-list li,
+.boosters-list li,
+kbd {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   outline: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
 /* === CANVAS BACKGROUND === */
 #stars {
   position: fixed;
-  z-index: -2;
   width: 100vw;
   height: 100vh;
+  z-index: -2;
 }
 
-/* === PANELS (LOGIN, LEADERBOARD, GAME OVER) === */
+/* === PANEL BASE === */
 .panel {
   position: absolute;
   top: 10%;
@@ -36,48 +42,107 @@ body {
   border: 3px solid var(--glow);
   border-radius: 10px;
   box-shadow: 0 0 15px var(--glow);
+  max-width: 320px;
   z-index: 3;
-  max-width: 300px;
 }
 
-#gameOverModal {
-  top: 40%;
-  transform: translate(-50%, -50%);
+/* === LOGIN PANEL SPECIFIC === */
+#loginScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
-
-/* === BUTTON STYLING === */
-.panel button, .mobile-controls button {
-  cursor: pointer;
+#loginScreen h1 {
+  font-size: 24px;
+  margin: 0;
+  color: var(--glow);
+  text-shadow: 0 0 8px var(--glow);
+}
+#loginScreen label {
+  align-self: flex-start;
+  font-size: 12px;
+}
+#loginScreen input,
+#loginScreen select {
+  width: 100%;
+  max-width: 260px;
+  padding: 8px 10px;
+  font-size: 12px;
+  background: #000;
+  color: var(--glow);
+  border: 2px solid var(--glow);
+  border-radius: 6px;
+  box-shadow: 0 0 6px var(--glow);
+}
+#loginScreen button {
+  width: 100%;
+  max-width: 220px;
+  padding: 10px 0;
+  font-size: 14px;
+  background: #000;
+  color: var(--glow);
+  border: 2px solid var(--glow);
+  border-radius: 8px;
   box-shadow: 0 0 8px var(--glow);
 }
 
-/* === GAME OVER MODAL SPECIFIC === */
-#gameOverModal {
-  display: none; /* hidden by default */
+/* === LEADERBOARD & INSTRUCTIONS PANELS === */
+#leaderboardPanel,
+#instructionsPanel {
+  top: 8%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.instructions-list,
+.boosters-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  font-size: 10px;
+  color: white;
+}
+.instructions-list li {
+  margin: 8px 0;
+}
+.instructions-list li strong {
+  color: var(--glow);
+}
+.boosters-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-#gameOverModal.visible {
-  display: block;
+/* === KBD KEY STYLE === */
+kbd {
+  display: inline-block;
+  background: #111;
+  color: var(--glow);
+  padding: 2px 6px;
+  border: 1px solid var(--glow);
+  border-radius: 4px;
+  font-size: 10px;
+  box-shadow: 0 0 4px var(--glow);
 }
 
 /* === SCOREBOARD & TITLE === */
 #gameTitle {
-  font-size: 14px;
+  font-size: 16px;
   margin: 10px 0;
   text-shadow: 0 0 6px white;
 }
-
 #scoreboard {
   font-size: 12px;
   margin-bottom: 10px;
   text-shadow: 0 0 5px white;
 }
 
-/* === CANVAS === */
+/* === GAME CANVAS === */
 #gameCanvas {
+  background: transparent;
   border: 3px solid white;
   box-shadow: 0 0 20px var(--glow);
-  background: transparent;
 }
 
 /* === COUNTDOWN OVERLAY === */
@@ -92,33 +157,16 @@ body {
   z-index: 10;
   animation: scaleIn 0.7s ease-in-out;
 }
-
 @keyframes scaleIn {
   0% { opacity: 0; transform: scale(0.8) translate(-50%, -50%); }
-  50% { opacity: 1; transform: scale(1.2) translate(-50%, -50%); }
-  100% { opacity: 0; transform: scale(1) translate(-50%, -50%); }
-}
-
-/* === LEADERBOARD === */
-#leaderboardPanel ul {
-  list-style: none;
-  padding: 0;
-  font-size: 10px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-#leaderboardPanel li {
-  margin: 5px 0;
-  color: var(--glow);
-  text-shadow: 0 0 3px var(--glow);
+  50%{ opacity: 1; transform: scale(1.2) translate(-50%, -50%); }
+ 100%{ opacity: 0; transform: scale(1) translate(-50%, -50%); }
 }
 
 /* === MOBILE CONTROLS === */
 .mobile-controls {
   margin-top: 10px;
 }
-
 .mobile-controls button {
   font-size: 20px;
   margin: 0 5px;
@@ -130,33 +178,40 @@ body {
   box-shadow: 0 0 8px var(--glow);
 }
 
-/* === VISIBILITY === */
+/* === GAME OVER MODAL === */
+#gameOverModal {
+  display: none;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+#gameOverModal.visible {
+  display: block;
+}
+
+/* === VISIBILITY HELPER === */
 .hidden {
   display: none !important;
 }
 
-/* === THEMES === */
+/* === THEME VARIABLES === */
 body.galaxy {
   --paddle-color: #00f2ff;
   --brick-color: #3498db;
   --ball-color: #0ff;
   --glow: cyan;
 }
-
 body.neon {
   --paddle-color: #ff00ff;
   --brick-color: #00ffff;
   --ball-color: #fff;
   --glow: magenta;
 }
-
 body.ice {
   --paddle-color: #ccf;
   --brick-color: #aaf;
   --ball-color: #eef;
   --glow: lightblue;
 }
-
 body.inferno {
   --paddle-color: #ff3300;
   --brick-color: #ff6600;
