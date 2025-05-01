@@ -1,123 +1,106 @@
-/* === BASE STYLES === */
+/* === BASE === */
 body {
   margin: 0;
   text-align: center;
   font-family: 'Press Start 2P', monospace;
-  background: black;
-  color: #fff;
   overflow: hidden;
+  background: black;
+  color: white;
 }
 
-canvas {
-  display: block;
-  margin: 0 auto;
-  background: transparent;
-}
-
-/* === STARFIELD CANVAS BACKGROUND === */
+/* === CANVAS BACKGROUND LAYER === */
 #stars {
   position: fixed;
-  top: 0;
-  left: 0;
   z-index: -2;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  background: black;
 }
 
-/* === START MENU === */
-#startScreen {
-  padding: 20px;
+/* === PANELS (Login, Leaderboard) === */
+.panel {
   position: absolute;
-  top: 25%;
+  top: 10%;
   left: 50%;
-  transform: translate(-50%, -25%);
-  background-color: rgba(0, 0, 0, 0.8);
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
   border: 3px solid #0ff;
-  border-radius: 15px;
-  box-shadow: 0 0 20px #0ff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #0ff;
   z-index: 3;
+  max-width: 300px;
 }
 
-#startScreen h1 {
-  font-size: 20px;
+.panel h1, .panel h2 {
+  font-size: 18px;
   margin-bottom: 10px;
   color: #0ff;
-  text-shadow: 0 0 8px #0ff;
+  text-shadow: 0 0 6px #0ff;
 }
 
-#startScreen label, select {
+.panel label, .panel select, .panel input {
   display: block;
-  margin: 10px auto;
+  margin: 8px auto;
   font-size: 12px;
 }
 
-#startScreen select {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 5px;
-  border: 1px solid #fff;
+.panel input, .panel select {
+  padding: 5px;
   background: #000;
   color: #0ff;
-  box-shadow: 0 0 5px #0ff;
+  border: 2px solid #0ff;
+  border-radius: 5px;
+  font-family: 'Press Start 2P';
+  text-align: center;
 }
 
-#startScreen button {
-  font-size: 14px;
-  padding: 10px 20px;
-  margin-top: 15px;
+.panel button {
+  font-size: 12px;
+  margin-top: 10px;
+  padding: 8px 12px;
   background-color: #000;
   color: #0ff;
   border: 2px solid #0ff;
   border-radius: 10px;
-  box-shadow: 0 0 10px #0ff;
+  box-shadow: 0 0 8px #0ff;
   cursor: pointer;
 }
 
-/* === GAME UI === */
+/* === LEADERBOARD === */
+#leaderboardPanel ul {
+  list-style: none;
+  padding: 0;
+  font-size: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#leaderboardPanel li {
+  margin: 5px 0;
+  color: #0ff;
+  text-shadow: 0 0 3px #0ff;
+}
+
+/* === SCOREBOARD & TITLE === */
 #gameTitle {
-  font-size: 18px;
-  margin-top: 10px;
-  display: none;
+  font-size: 16px;
+  margin: 10px 0;
+  color: white;
+  text-shadow: 0 0 6px #fff;
 }
 
 #scoreboard {
   font-size: 12px;
-  margin-bottom: 10px;
   text-shadow: 0 0 5px white;
-  display: none;
+  margin-bottom: 10px;
 }
 
+/* === GAME CANVAS === */
 #gameCanvas {
   border: 3px solid white;
   box-shadow: 0 0 20px cyan;
-  display: none;
-}
-
-/* === BOOSTER ANIMATION === */
-.boosterCollected {
-  animation: flash 0.4s ease-out;
-}
-
-@keyframes flash {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.5; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* === MOBILE CONTROLS === */
-.mobile-controls {
-  margin-top: 15px;
-  display: none;
-}
-
-.mobile-controls button {
-  font-size: 20px;
-  padding: 10px 15px;
-  background: #111;
-  color: #0ff;
-  border: 2px solid #0ff;
-  border-radius: 10px;
-  box-shadow: 0 0 8px #0ff;
+  background: transparent;
 }
 
 /* === INTRO TEXT === */
@@ -141,32 +124,52 @@ canvas {
   }
 }
 
-/* === THEMES === */
+/* === MOBILE CONTROLS === */
+.mobile-controls {
+  margin-top: 10px;
+}
+
+.mobile-controls button {
+  font-size: 20px;
+  margin: 0 5px;
+  padding: 10px 15px;
+  background: #111;
+  color: #0ff;
+  border: 2px solid #0ff;
+  border-radius: 10px;
+  box-shadow: 0 0 8px #0ff;
+}
+
+/* === VISIBILITY TOGGLERS === */
+.hidden {
+  display: none !important;
+}
+
+/* === THEME VARIANTS === */
 body.galaxy {
-  --bg-glow: #0ff;
+  --paddle-color: #00f2ff;
   --brick-color: #3498db;
-  --paddle-color: #f39c12;
   --ball-color: #0ff;
+  --glow: cyan;
 }
 
 body.neon {
-  --bg-glow: #f0f;
-  --brick-color: #ff00ff;
-  --paddle-color: #00ffff;
+  --paddle-color: #ff00ff;
+  --brick-color: #00ffff;
   --ball-color: #fff;
+  --glow: magenta;
 }
 
 body.ice {
-  --bg-glow: #99f;
-  --brick-color: #bbf;
   --paddle-color: #ccf;
+  --brick-color: #aaf;
   --ball-color: #eef;
+  --glow: lightblue;
 }
 
 body.inferno {
-  --bg-glow: #f30;
-  --brick-color: #e74c3c;
-  --paddle-color: #ffcc00;
-  --ball-color: #ff3300;
+  --paddle-color: #ff3300;
+  --brick-color: #ff6600;
+  --ball-color: #ffcc00;
+  --glow: orange;
 }
-
