@@ -1,5 +1,5 @@
 
-/* === BASE === */
+/* === GENERAL === */
 body {
   margin: 0;
   font-family: 'Press Start 2P', monospace;
@@ -9,156 +9,149 @@ body {
   color: white;
 }
 
-/* === CANVAS BACKGROUND === */
-#stars {
-  position: fixed;
-  z-index: -2;
-  width: 100vw;
-  height: 100vh;
+/* === CANVAS === */
+#gameCanvas, #stars {
+  position: relative;
+  z-index: 0;
+  display: block;
+  margin: 0 auto;
+  background-color: transparent;
 }
 
-/* === PANELS (LOGIN, LEADERBOARD) === */
+/* === PANELS === */
 .panel {
   position: absolute;
   top: 10%;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.85);
-  padding: 20px 30px;
+  padding: 20px;
   border: 3px solid var(--glow);
-  border-radius: 10px;
-  box-shadow: 0 0 15px var(--glow);
-  z-index: 3;
-  max-width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px var(--glow);
+  z-index: 2;
 }
 
 .panel input, .panel select, .panel button {
-  display: block;
   margin: 10px auto;
+  padding: 10px;
   font-family: inherit;
   font-size: 12px;
-  background: #000;
+  border-radius: 8px;
+  background-color: black;
   color: var(--glow);
   border: 2px solid var(--glow);
-  padding: 5px 10px;
-  border-radius: 8px;
-  text-align: center;
+  display: block;
 }
 
 .panel button {
   cursor: pointer;
-  box-shadow: 0 0 8px var(--glow);
+  box-shadow: 0 0 10px var(--glow);
 }
 
-/* === SCOREBOARD & TITLE === */
-#gameTitle {
-  font-size: 14px;
-  margin: 10px 0;
-  text-shadow: 0 0 6px white;
+/* === MODAL === */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom:0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
-#scoreboard {
-  font-size: 12px;
-  margin-bottom: 10px;
-  text-shadow: 0 0 5px white;
-}
-
-/* === CANVAS === */
-#gameCanvas {
-  border: 3px solid white;
+.modal-content {
+  background: #111;
+  border: 3px solid var(--glow);
+  padding: 30px;
+  text-align: center;
   box-shadow: 0 0 20px var(--glow);
-  background: transparent;
+  border-radius: 10px;
 }
 
-/* === COUNTDOWN OVERLAY === */
+.modal button {
+  margin-top: 20px;
+}
+
+/* === COUNTDOWN === */
 #countdownOverlay {
   position: absolute;
-  top: 40%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 50px;
+  font-size: 48px;
+  font-weight: bold;
+  z-index: 9;
+  animation: fadePulse 0.7s ease-in-out;
   color: white;
-  text-shadow: 0 0 20px yellow;
-  z-index: 10;
-  animation: scaleIn 0.7s ease-in-out;
+  text-shadow: 0 0 15px yellow;
 }
 
-@keyframes scaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translate(-50%, -50%);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2) translate(-50%, -50%);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1) translate(-50%, -50%);
-  }
+@keyframes fadePulse {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 0; transform: scale(1); }
 }
 
-/* === LEADERBOARD === */
-#leaderboardPanel ul {
-  list-style: none;
-  padding: 0;
-  font-size: 10px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-#leaderboardPanel li {
-  margin: 5px 0;
-  color: var(--glow);
-  text-shadow: 0 0 3px var(--glow);
+/* === SCOREBOARD === */
+#scoreboard {
+  font-size: 12px;
+  margin-bottom: 8px;
+  text-shadow: 0 0 5px white;
 }
 
 /* === MOBILE CONTROLS === */
 .mobile-controls {
   margin-top: 10px;
+  user-select: none;
 }
 
 .mobile-controls button {
-  font-size: 20px;
-  margin: 0 5px;
-  padding: 10px 15px;
+  font-size: 24px;
+  margin: 0 10px;
+  padding: 12px;
   background: #111;
   color: var(--glow);
   border: 2px solid var(--glow);
   border-radius: 10px;
-  box-shadow: 0 0 8px var(--glow);
+  box-shadow: 0 0 10px var(--glow);
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* === THEMES === */
+body.galaxy {
+  --glow: cyan;
+  --paddle-color: #00f2ff;
+  --brick-color: #3399ff;
+  --ball-color: #0ff;
+}
+
+body.neon {
+  --glow: magenta;
+  --paddle-color: #ff00ff;
+  --brick-color: #00ffff;
+  --ball-color: #fff;
+}
+
+body.ice {
+  --glow: lightblue;
+  --paddle-color: #ccf;
+  --brick-color: #aaf;
+  --ball-color: #eef;
+}
+
+body.inferno {
+  --glow: orange;
+  --paddle-color: #ff3300;
+  --brick-color: #ff6600;
+  --ball-color: #ffcc00;
 }
 
 /* === VISIBILITY === */
 .hidden {
   display: none !important;
-}
-
-/* === THEMES === */
-body.galaxy {
-  --paddle-color: #00f2ff;
-  --brick-color: #3498db;
-  --ball-color: #0ff;
-  --glow: cyan;
-}
-
-body.neon {
-  --paddle-color: #ff00ff;
-  --brick-color: #00ffff;
-  --ball-color: #fff;
-  --glow: magenta;
-}
-
-body.ice {
-  --paddle-color: #ccf;
-  --brick-color: #aaf;
-  --ball-color: #eef;
-  --glow: lightblue;
-}
-
-body.inferno {
-  --paddle-color: #ff3300;
-  --brick-color: #ff6600;
-  --ball-color: #ffcc00;
-  --glow: orange;
 }
