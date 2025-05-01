@@ -1,6 +1,6 @@
 <!-- index.html -->
 <!DOCTYPE html>
-<html lang="en" class="galaxy-theme">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,31 +8,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="game-overlay">
-        <div id="hud">
-            <div class="hud-item">SCORE: <span id="score-value">0</span></div>
-            <div class="hud-item">LIVES: <span id="lives-value">3</span></div>
-            <div class="hud-item">LEVEL: <span id="level-value">1</span></div>
-        </div>
-        
-        <div id="countdown" class="countdown-hidden">
-            <span class="countdown-number">3</span>
-        </div>
-        
-        <div id="mobile-controls">
-            <button class="mobile-btn left">◀</button>
-            <button class="mobile-btn right">▶</button>
-        </div>
+<body class="galaxy-theme">
+    <div id="hud">
+        <div>SCORE: <span id="score">0</span></div>
+        <div>LIVES: <span id="lives">3</span></div>
+        <div>LEVEL: <span id="level">1</span></div>
     </div>
-
+    
     <canvas id="gameCanvas"></canvas>
-
-    <div id="game-modals">
-        <div id="leaderboard-modal" class="modal-hidden">
-            <h2>🏆 LEADERBOARD 🏆</h2>
-            <ol id="leaderboard-list"></ol>
-        </div>
+    
+    <div id="mobile-controls">
+        <button class="mobile-btn left">◀</button>
+        <button class="mobile-btn right">▶</button>
     </div>
 
     <script src="script.js"></script>
