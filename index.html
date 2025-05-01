@@ -1,30 +1,87 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>DX-Ball Legendary Edition</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>AD Arcade - DX-Ball: Legendary Edition</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  </style>
 </head>
 <body class="galaxy">
-  <div id="theme-switcher">
-    <button data-theme="galaxy">Galaxy</button>
-    <button data-theme="neon">Neon Grid</button>
-    <button data-theme="ice">Ice Realm</button>
-    <button data-theme="inferno">Inferno</button>
+  <!-- 🌌 Parallax Background -->
+  <canvas id="stars"></canvas>
+
+  <!-- 🎮 Login Panel -->
+  <div id="loginScreen" class="panel">
+    <h1>🎮 DX-BALL: Legendary Edition</h1>
+    <p>Enter your name to start the cosmic challenge.</p>
+
+    <label for="playerName">👤 Name:</label>
+    <input type="text" id="playerName" placeholder="Enter your name" required />
+
+    <label for="themeSelect">🎨 Theme:</label>
+    <select id="themeSelect">
+      <option value="galaxy" selected>🌌 Galaxy</option>
+      <option value="neon">🧠 Neon Grid</option>
+      <option value="ice">❄️ Ice Realm</option>
+      <option value="inferno">🔥 Inferno</option>
+    </select>
+
+    <label for="musicToggle">
+      <input type="checkbox" id="musicToggle" checked />
+      🎵 Background Music
+    </label>
+
+    <button id="startGameBtn">🚀 Start Game</button>
+    <button id="viewLeaderboardBtn">🏆 View Leaderboard</button>
   </div>
-  <div id="hud">
-    <span id="score">00000</span>
-    <span id="lives">♥♥♥</span>
-    <span id="level">1</span>
+
+  <!-- 🏆 Leaderboard Panel -->
+  <div id="leaderboardPanel" class="panel hidden">
+    <h2>🏆 Top 10 Legends</h2>
+    <ul id="leaderboardList"></ul>
+    <button id="closeLeaderboardBtn">❌ Close</button>
   </div>
-  <canvas id="game"></canvas>
-  <div id="mobile-controls">
-    <button class="mobile-btn left">◀</button>
-    <button class="mobile-btn right">▶</button>
+
+  <!-- 🧾 Game Info -->
+  <h2 id="gameTitle" class="hidden">AD Arcade - DX-Ball Revival</h2>
+  <div id="scoreboard" class="hidden">
+    <strong><span id="currentPlayer">Player</span></strong> |
+    Score: <span id="score">0</span> |
+    Lives: <span id="lives">3</span> |
+    High Score: <span id="highscore">0</span>
   </div>
-  <div id="countdown"></div>
+
+  <!-- 🕹️ Game Canvas -->
+  <canvas id="gameCanvas" width="800" height="600" class="hidden"></canvas>
+
+  <!-- 🎬 Countdown Overlay -->
+  <div id="countdownOverlay" class="hidden"></div>
+
+  <!-- 🧲 Game Over Modal -->
+  <div id="gameOverModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>💀 Game Over</h2>
+      <p id="finalScore">Your score: 0</p>
+      <button id="restartBtn">🔄 Play Again</button>
+    </div>
+  </div>
+
+  <!-- 📱 Mobile Controls -->
+  <div class="mobile-controls hidden">
+    <button id="leftBtn">◀️</button>
+    <button id="rightBtn">▶️</button>
+  </div>
+
+  <!-- 🔊 Background Music -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="background.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- 🚀 Script -->
   <script src="script.js"></script>
 </body>
 </html>
