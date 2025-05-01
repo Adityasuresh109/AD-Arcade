@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AD Arcade - Legendary Edition</title>
+  <title>AD Arcade: Retro DX Ball</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -11,14 +10,16 @@
 </head>
 <body class="galaxy">
 
+  <!-- 🌌 Animated Starfield Background -->
   <canvas id="stars"></canvas>
 
-  <!-- Login Screen -->
+  <!-- 🎮 Login Panel -->
   <div id="loginScreen" class="panel">
-    <h1>🎮 AD ARCADE - Retro DX Ball</h1>
-    <p>Enter your name and choose your journey</p>
+    <h1><strong>AD Arcade: Retro DX Ball</strong></h1>
+
     <label for="playerName">👤 Name:</label>
     <input type="text" id="playerName" placeholder="Enter your name" required />
+
     <label for="themeSelect">🎨 Theme:</label>
     <select id="themeSelect">
       <option value="galaxy" selected>🌌 Galaxy</option>
@@ -26,25 +27,52 @@
       <option value="ice">❄️ Ice Realm</option>
       <option value="inferno">🔥 Inferno</option>
     </select>
+
     <label for="levelSelect">🧱 Level:</label>
     <select id="levelSelect">
       <option value="easy" selected>Easy</option>
       <option value="medium">Medium</option>
       <option value="hard">Hard</option>
     </select>
-    <label><input type="checkbox" id="musicToggle" checked /> 🎶 Music</label>
-    <button id="startGameBtn">🚀 Start Game</button>
-    <button id="viewLeaderboardBtn">🏆 View Leaderboard</button>
+
+    <label>
+      <input type="checkbox" id="musicToggle" checked /> 🎶 Music
+    </label>
+
+    <button id="startGameBtn" class="no-select">🚀 Start Game</button>
+    <button id="viewInstructionsBtn" class="no-select">📖 Instructions</button>
+    <button id="viewLeaderboardBtn" class="no-select">🏆 View Leaderboard</button>
   </div>
 
-  <!-- Leaderboard Panel -->
+  <!-- 🏆 Leaderboard Panel -->
   <div id="leaderboardPanel" class="panel hidden">
     <h2>🏆 Top 10 Legends</h2>
     <ul id="leaderboardList"></ul>
-    <button id="closeLeaderboardBtn">❌ Close</button>
+    <button id="closeLeaderboardBtn" class="no-select">❌ Close</button>
   </div>
 
-  <!-- Game Info -->
+  <!-- 📖 Instructions Panel -->
+  <div id="instructionsPanel" class="panel hidden">
+    <h2>📖 Instructions</h2>
+    <ul class="instructions-list">
+      <li><strong>🎮 Gameplay:</strong> Move the paddle with <kbd>←</kbd> <kbd>→</kbd>, A/D keys, touch buttons, or tilt.</li>
+      <li><strong>⏱ Countdown:</strong> A 3‒2‒1‒GO appears before each launch.</li>
+      <li><strong>🧱 Levels:</strong> Clear all bricks to advance. Speeds → Easy: 1.0x, Medium: 1.3x, Hard: 1.6x.</li>
+      <li><strong>🧲 Boosters:</strong>
+        <ul class="boosters-list">
+          <li>⇔ <strong>Wide:</strong> Paddle doubles width (10 s)</li>
+          <li>💚 <strong>Life:</strong> Gain +1 life</li>
+          <li>❄️ <strong>Slow:</strong> Halve ball speed (10 s)</li>
+          <li>⚪⚪ <strong>Multi:</strong> Spawn an extra ball</li>
+          <li>🔥 <strong>Fireball:</strong> Ball pierces bricks (5 s)</li>
+        </ul>
+      </li>
+      <li><strong>🎶 Music:</strong> Toggle background music on/off before you start.</li>
+    </ul>
+    <button id="closeInstructionsBtn" class="no-select">❌ Close</button>
+  </div>
+
+  <!-- 🎮 Game UI -->
   <h2 id="gameTitle" class="hidden">AD Arcade - DX-Ball Revival</h2>
   <div id="scoreboard" class="hidden">
     <strong><span id="currentPlayer">Player</span></strong> |
@@ -53,32 +81,35 @@
     High Score: <span id="highscore">0</span>
   </div>
 
-  <!-- Game Canvas -->
+  <!-- 🕹️ Game Canvas -->
   <canvas id="gameCanvas" width="800" height="600" class="hidden"></canvas>
 
-  <!-- Countdown -->
+  <!-- ⏱️ Countdown Overlay -->
   <div id="countdownOverlay" class="hidden"></div>
 
-  <!-- Mobile Controls -->
+  <!-- 📱 Mobile Controls -->
   <div class="mobile-controls hidden">
     <button id="leftBtn" class="no-select">◀️</button>
     <button id="rightBtn" class="no-select">▶️</button>
     <button id="enableTilt" class="no-select">📱 Enable Tilt</button>
   </div>
 
-  <!-- Music -->
+  <!-- 🔊 Background Music -->
   <audio id="bgMusic" loop preload="auto">
     <source src="background.mp3" type="audio/mp3" />
   </audio>
 
-  <!-- Game Over Modal -->
-  <div id="gameOverModal" class="panel hidden" style="z-index:10;">
+  <!-- 🎮 Game Over Modal -->
+  <div id="gameOverModal" class="panel hidden">
     <h2>🎮 Game Over</h2>
     <p>Thanks for playing!</p>
-    <button onclick="location.reload()">🔁 Restart Game</button>
+    <button onclick="location.reload()" class="no-select">🔁 Restart Game</button>
   </div>
 
+  <!-- 🎬 Ball Launch Intro -->
   <div id="introText">GET READY</div>
+
+  <!-- 💻 Game Script -->
   <script src="script.js"></script>
 </body>
 </html>
