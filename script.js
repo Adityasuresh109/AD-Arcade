@@ -1,4 +1,5 @@
-// === 🌌 Starfield Animation ===
+
+// === Starfield Background ===
 const starCanvas = document.getElementById("stars");
 const starCtx = starCanvas.getContext("2d");
 starCanvas.width = window.innerWidth;
@@ -28,32 +29,58 @@ function drawStars() {
 }
 drawStars();
 
-// === 🔁 Global State ===
+// === Global Variables ===
 let playerName = '';
 let currentTheme = 'galaxy';
 let currentLevel = 'easy';
 let score = 0;
 let lives = 3;
-let levelIndex = 0;
 let highScore = localStorage.getItem('dxball_highscore') || 0;
 let leaderboard = JSON.parse(localStorage.getItem('adArcadeLeaderboard')) || [];
-
-let paddle, balls, bricks, powerUps, ballLaunched = false;
-let countdownInterval, ballSpeed = 4;
-
+let paddle, balls, bricks, powerUps;
+let levelIndex = 0;
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// === 🎛️ DOM Elements ===
+// === DOM Elements ===
 const loginScreen = document.getElementById('loginScreen');
 const startGameBtn = document.getElementById('startGameBtn');
 const viewLeaderboardBtn = document.getElementById('viewLeaderboardBtn');
 const leaderboardPanel = document.getElementById('leaderboardPanel');
 const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
 const leaderboardList = document.getElementById('leaderboardList');
-const countdownOverlay = document.getElementById("countdownOverlay");
 
-// === 🏆 Leaderboard ===
+// === Event Listeners ===
+startGameBtn.addEventListener('click', () => {
+  const nameInput = document.getElementById('playerName').value.trim();
+  if (!nameInput) return alert("Please enter your name.");
+  playerName = nameInput;
+  currentTheme = document.getElementById('themeSelect').value;
+  currentLevel = document.getElementById('levelSelect').value;
+  document.body.className = currentTheme;
+
+  loginScreen.classList.add('hidden');
+  document.getElementById('gameTitle').classList.remove('hidden');
+  document.getElementById('scoreboard').classList.remove('hidden');
+  document.getElementById('gameCanvas').classList.remove('hidden');
+  document.querySelector('.mobile-controls').classList.remove('hidden');
+  document.getElementById('currentPlayer').textContent = playerName;
+
+  initGame(currentLevel);
+  updateUI();
+  draw();
+});
+
+viewLeaderboardBtn.addEventListener('click', () => {
+  leaderboardPanel.classList.remove('hidden');
+  renderLeaderboard();
+});
+
+closeLeaderboardBtn.addEventListener('click', () => {
+  leaderboardPanel.classList.add('hidden');
+});
+
+// === Leaderboard ===
 function renderLeaderboard() {
   leaderboardList.innerHTML = '';
   const sorted = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
@@ -68,146 +95,7 @@ function saveLeaderboard() {
   localStorage.setItem('adArcadeLeaderboard', JSON.stringify(leaderboard));
 }
 
-// === 🎮 Game UI Events ===
-startGameBtn.addEventListener('click', () => {
-  const nameInput = document.getElementById('playerName').value.trim();
-  if (!nameInput) return alert("Please enter your name.");
-  playerName = nameInput;
-  currentTheme = document.getElementById('themeSelect').value;
-  currentLevel = document.getElementById('levelSelect').value;
-  levelIndex = Object.keys(levels).indexOf(currentLevel);
-
-  document.body.className = currentTheme;
-
-  loginScreen.classList.add('hidden');
-  document.getElementById('gameTitle').classList.remove('hidden');
-  document.getElementById('scoreboard').classList.remove('hidden');
-  document.getElementById('gameCanvas').classList.remove('hidden');
-  document.querySelector('.mobile-controls').classList.remove('hidden');
-  document.getElementById('currentPlayer').textContent = playerName;
-
-  // 🎧 Music
-  const musicToggle = document.getElementById("musicToggle").checked;
-  const bgMusic = document.getElementById("bgMusic");
-  if (musicToggle) {
-    bgMusic.volume = 0.3;
-    bgMusic.play().catch(e => console.warn("Music blocked", e));
-  } else {
-    bgMusic.pause();
-  }
-
-  initGame(currentLevel);
-  updateUI();
-  startCountdown(); // ⏱️
-});
-
-viewLeaderboardBtn.addEventListener('click', () => {
-  leaderboardPanel.classList.remove('hidden');
-  renderLeaderboard();
-});
-
-closeLeaderboardBtn.addEventListener('click', () => {
-  leaderboardPanel.classList.add('hidden');
-});
-// === 🧱 Level Layouts ===
-const levels = {
-  easy:   [1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
-  medium: [1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0],
-  hard:   [1,1,1,1,1,1,1,1, 1,0,1,0,1,0,1,1, 1,1,0,1,0,1,1,1, 1,1,1,0,1,1,1,1, 1,1,1,1,1,1,1,1]
-};
-
-const brickConfig = {
-  colCount: 8,
-  rowCount: 5,
-  width: 75,
-  height: 20,
-  padding: 10,
-  offsetTop: 40,
-  offsetLeft: 35
-};
-
-const powerUpTypes = ["wide", "life", "slow", "multi", "fireball"];
-const powerUpColors = {
-  wide: "gold",
-  life: "limegreen",
-  slow: "cyan",
-  multi: "magenta",
-  fireball: "red"
-};
-
-// === 🧠 Game Initialization ===
-function initGame(levelName) {
-  score = 0;
-  lives = 3;
-  powerUps = [];
-  ballSpeed = 4 + (levelIndex * 1); // Ball speed increases with level
-
-  // Paddle Setup
-  paddle = {
-    height: 15,
-    width: 100,
-    x: (canvas.width - 100) / 2,
-    dx: 7,
-    movingLeft: false,
-    movingRight: false
-  };
-
-  // Ball Setup
-  balls = [{
-    x: paddle.x + paddle.width / 2,
-    y: canvas.height - paddle.height - 30,
-    dx: 0,
-    dy: 0,
-    radius: 10,
-    stuck: true,
-    active: true
-  }];
-
-  // Bricks Setup
-  const layout = levels[levelName];
-  bricks = [];
-  for (let c = 0; c < brickConfig.colCount; c++) {
-    bricks[c] = [];
-    for (let r = 0; r < brickConfig.rowCount; r++) {
-      let idx = r * brickConfig.colCount + c;
-      bricks[c][r] = {
-        x: 0,
-        y: 0,
-        status: layout[idx],
-        hp: 1
-      };
-    }
-  }
-}
-
-// === 🧱 Scoreboard ===
-function updateUI() {
-  document.getElementById("score").textContent = score;
-  document.getElementById("lives").textContent = lives;
-  document.getElementById("highscore").textContent = highScore;
-}
-
-// === ⏱️ Countdown Start Function ===
-function startCountdown() {
-  let count = 3;
-  countdownOverlay.classList.remove("hidden");
-  countdownOverlay.innerText = count;
-
-  countdownInterval = setInterval(() => {
-    count--;
-    if (count === 0) {
-      countdownOverlay.innerText = "GO!";
-    } else if (count < 0) {
-      clearInterval(countdownInterval);
-      countdownOverlay.classList.add("hidden");
-      launchBall();
-    } else {
-      countdownOverlay.innerText = count;
-    }
-  }, 800);
-}
-
-// === 🚀 Launch Ball ===
+// === 🚀 Launch Ball (Updated with draw call) ===
 function launchBall() {
   ballLaunched = true;
   balls.forEach(ball => {
@@ -215,250 +103,21 @@ function launchBall() {
     ball.dy = -ballSpeed;
     ball.stuck = false;
   });
+  draw(); // Ensure the game loop starts
 }
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // === 🟦 Paddle ===
-  ctx.beginPath();
-  ctx.rect(paddle.x, canvas.height - paddle.height - 10, paddle.width, paddle.height);
-  ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--paddle-color');
-  ctx.shadowColor = ctx.fillStyle;
-  ctx.shadowBlur = 12;
-  ctx.fill();
-  ctx.closePath();
+// === 🎧 Music Logic (Improved Playback Handling) ===
+const musicToggle = document.getElementById("musicToggle").checked;
+const bgMusic = document.getElementById("bgMusic");
 
-  // === 🧱 Bricks ===
-  for (let c = 0; c < brickConfig.colCount; c++) {
-    for (let r = 0; r < brickConfig.rowCount; r++) {
-      const b = bricks[c][r];
-      if (b.status === 1) {
-        const x = c * (brickConfig.width + brickConfig.padding) + brickConfig.offsetLeft;
-        const y = r * (brickConfig.height + brickConfig.padding) + brickConfig.offsetTop;
-        b.x = x;
-        b.y = y;
-
-        ctx.beginPath();
-        ctx.rect(x, y, brickConfig.width, brickConfig.height);
-        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--brick-color');
-        ctx.shadowColor = ctx.fillStyle;
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.closePath();
-      }
-    }
-  }
-
-  // === 🧲 Boosters ===
-  powerUps.forEach((p, i) => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 10, 0, Math.PI * 2);
-    ctx.fillStyle = powerUpColors[p.type];
-    ctx.shadowColor = powerUpColors[p.type];
-    ctx.shadowBlur = 10;
-    ctx.fill();
-    ctx.closePath();
-
-    p.y += 3;
-
-    // Paddle collection
-    if (
-      p.y > canvas.height - paddle.height - 10 &&
-      p.x > paddle.x &&
-      p.x < paddle.x + paddle.width
-    ) {
-      activatePowerUp(p.type);
-      powerUps.splice(i, 1);
-    } else if (p.y > canvas.height) {
-      powerUps.splice(i, 1);
-    }
+if (musicToggle) {
+  bgMusic.volume = 0.3;
+  bgMusic.play().then(() => {
+    console.log("Music started successfully.");
+  }).catch(e => {
+    alert("Music playback blocked by your browser. Click or tap anywhere to start.");
+    document.body.addEventListener("click", () => bgMusic.play());
   });
-
-  // === 🟠 Balls ===
-  balls.forEach(ball => {
-    if (ball.stuck) {
-      ball.x = paddle.x + paddle.width / 2;
-      ball.y = canvas.height - paddle.height - 30;
-    } else {
-      ball.x += ball.dx;
-      ball.y += ball.dy;
-    }
-
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--ball-color');
-    ctx.shadowColor = ctx.fillStyle;
-    ctx.shadowBlur = 15;
-    ctx.fill();
-    ctx.closePath();
-
-    // Wall bounce
-    if (ball.x < ball.radius || ball.x > canvas.width - ball.radius) ball.dx *= -1;
-    if (ball.y < ball.radius) ball.dy *= -1;
-
-    // Paddle bounce
-    if (
-      ball.y + ball.radius >= canvas.height - paddle.height - 10 &&
-      ball.x > paddle.x &&
-      ball.x < paddle.x + paddle.width
-    ) {
-      const collide = ball.x - (paddle.x + paddle.width / 2);
-      const angle = (collide / (paddle.width / 2)) * (Math.PI / 3);
-      const speed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
-      ball.dx = speed * Math.sin(angle);
-      ball.dy = -speed * Math.cos(angle);
-    }
-
-    // Brick collision
-    for (let c = 0; c < brickConfig.colCount; c++) {
-      for (let r = 0; r < brickConfig.rowCount; r++) {
-        const b = bricks[c][r];
-        if (
-          b.status === 1 &&
-          ball.x > b.x && ball.x < b.x + brickConfig.width &&
-          ball.y > b.y && ball.y < b.y + brickConfig.height
-        ) {
-          b.status = 0;
-          score++;
-          updateUI();
-
-          if (Math.random() < 0.35) {
-            const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-            powerUps.push({ x: b.x + 30, y: b.y, type });
-          }
-
-          ball.dy *= -1;
-        }
-      }
-    }
-
-    // Lost ball
-    if (ball.y > canvas.height) ball.active = false;
-  });
-
-  balls = balls.filter(b => b.active);
-  if (balls.length === 0) {
-    lives--;
-    updateUI();
-    if (lives <= 0) {
-      endGame();
-    } else {
-      balls.push({
-        x: paddle.x + paddle.width / 2,
-        y: canvas.height - paddle.height - 30,
-        dx: 0, dy: 0,
-        radius: 10,
-        stuck: true,
-        active: true
-      });
-      startCountdown();
-    }
-  }
-
-  // Paddle movement
-  if (paddle.movingRight && paddle.x < canvas.width - paddle.width) paddle.x += paddle.dx;
-  if (paddle.movingLeft && paddle.x > 0) paddle.x -= paddle.dx;
-
-  // Level transition
-  const allBricksCleared = bricks.flat().every(b => b.status === 0);
-  if (allBricksCleared) {
-    levelIndex = (levelIndex + 1) % Object.keys(levels).length;
-    currentLevel = Object.keys(levels)[levelIndex];
-    initGame(currentLevel);
-    updateUI();
-    startCountdown();
-  }
-
-  requestAnimationFrame(draw);
-}
-
-// === 🧲 Power-Up Logic ===
-function activatePowerUp(type) {
-  if (type === "wide") {
-    paddle.width = 150;
-    setTimeout(() => paddle.width = 100, 10000);
-  }
-  if (type === "life") {
-    lives++;
-    updateUI();
-  }
-  if (type === "slow") {
-    balls.forEach(b => { b.dx *= 0.5; b.dy *= 0.5; });
-    setTimeout(() => balls.forEach(b => { b.dx *= 2; b.dy *= 2; }), 10000);
-  }
-  if (type === "multi") {
-    if (balls.length < 3) {
-      const base = balls[0];
-      balls.push({
-        x: base.x, y: base.y,
-        dx: -base.dx, dy: -base.dy,
-        radius: 10, active: true, stuck: false
-      });
-    }
-  }
-  if (type === "fireball") {
-    balls.forEach(b => b.fire = true);
-    setTimeout(() => balls.forEach(b => delete b.fire), 5000);
-  }
-}
-
-// === 💀 Game Over ===
-function endGame() {
-  alert("😢 Game Over");
-  if (score > highScore) localStorage.setItem('dxball_highscore', score);
-  leaderboard.push({
-    name: playerName,
-    score,
-    theme: currentTheme,
-    date: new Date().toLocaleDateString()
-  });
-  leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
-  saveLeaderboard();
-  location.reload();
-}
-
-// === 🎮 Controls ===
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowRight" || e.key === "d") paddle.movingRight = true;
-  if (e.key === "ArrowLeft" || e.key === "a") paddle.movingLeft = true;
-});
-document.addEventListener("keyup", e => {
-  if (e.key === "ArrowRight" || e.key === "d") paddle.movingRight = false;
-  if (e.key === "ArrowLeft" || e.key === "a") paddle.movingLeft = false;
-});
-document.getElementById("leftBtn").addEventListener("touchstart", () => paddle.movingLeft = true);
-document.getElementById("leftBtn").addEventListener("touchend", () => paddle.movingLeft = false);
-document.getElementById("rightBtn").addEventListener("touchstart", () => paddle.movingRight = true);
-document.getElementById("rightBtn").addEventListener("touchend", () => paddle.movingRight = false);
-
-// === 📱 Tilt Controls ===
-document.getElementById("enableTilt").addEventListener("click", () => {
-  if (
-    typeof DeviceOrientationEvent !== 'undefined' &&
-    typeof DeviceOrientationEvent.requestPermission === 'function'
-  ) {
-    DeviceOrientationEvent.requestPermission().then(state => {
-      if (state === 'granted') {
-        window.addEventListener("deviceorientation", handleTilt);
-      } else {
-        alert("Tilt permission denied.");
-      }
-    }).catch(console.error);
-  } else {
-    window.addEventListener("deviceorientation", handleTilt);
-  }
-});
-
-function handleTilt(e) {
-  const tilt = e.gamma;
-  if (tilt > 10) {
-    paddle.movingRight = true;
-    paddle.movingLeft = false;
-  } else if (tilt < -10) {
-    paddle.movingLeft = true;
-    paddle.movingRight = false;
-  } else {
-    paddle.movingLeft = false;
-    paddle.movingRight = false;
-  }
+} else {
+  bgMusic.pause();
 }
