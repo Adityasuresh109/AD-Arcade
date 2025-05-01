@@ -1,42 +1,13 @@
 /* style.css */
-:root {
-    --neon-cyan: #0ff;
-    --neon-pink: #f0f;
-    --icy-blue: #7af;
-    --flame-orange: #f90;
-    --matrix-green: #0f0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    margin: 0;
     overflow: hidden;
     font-family: 'Press Start 2P', cursive;
-    background: #000;
-}
-
-/* Theme Backgrounds */
-.galaxy-theme {
-    background: radial-gradient(circle, #000428 0%, #004e92 100%);
-}
-
-.neon-grid-theme {
-    background: 
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(0, 255, 0, 0.1) 3px,
-            rgba(0, 255, 0, 0.1) 6px
-        ),
-        #0f0f23;
-}
-
-.ice-realm-theme {
-    background: linear-gradient(45deg, #e0f6ff 0%, #b0e0e6 100%);
-}
-
-.inferno-theme {
-    background: linear-gradient(45deg, #3a0000 0%, #8b0000 100%);
 }
 
 #gameCanvas {
@@ -45,69 +16,39 @@ body {
     left: 0;
 }
 
-#game-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-}
-
-/* HUD Styles */
 #hud {
     position: fixed;
-    top: 20px;
-    left: 20px;
-    color: #fff;
-    text-shadow: 0 0 10px var(--neon-cyan);
+    top: 10px;
+    left: 10px;
+    color: white;
+    text-shadow: 0 0 10px cyan;
+    z-index: 100;
 }
 
-.hud-item {
-    margin-bottom: 15px;
-    font-size: 0.8rem;
-}
-
-/* Mobile Controls */
-#mobile-controls {
-    position: fixed;
-    bottom: 30px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    box-sizing: border-box;
+#hud div {
+    margin-bottom: 10px;
+    font-size: 12px;
 }
 
 .mobile-btn {
-    pointer-events: auto;
+    position: fixed;
+    bottom: 20px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    border: 3px solid #fff;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
     font-size: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    color: white;
     touch-action: manipulation;
     user-select: none;
-    box-shadow: 0 0 15px var(--neon-cyan);
 }
 
-/* Countdown Animation */
-#countdown {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 8rem;
-    color: #fff;
-    text-shadow: 0 0 30px var(--neon-cyan);
-    opacity: 0;
-    animation: pulseText 1s infinite;
-}
+.mobile-btn.left { left: 20px; }
+.mobile-btn.right { right: 20px; }
 
-@keyframes pulseText {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.2); }
-    100% { transform: translate(-50%, -50%) scale(1); }
-}
+/* Themes */
+.galaxy-theme { background: #000428; }
+.neon-grid-theme { background: #0f0f23; }
+.ice-realm-theme { background: #e0f6ff; }
+.inferno-theme { background: #3a0000; }
