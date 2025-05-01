@@ -28,7 +28,7 @@ function drawStars() {
 }
 drawStars();
 
-// === Global Game State ===
+// === Game State ===
 let playerName = '';
 let currentTheme = 'galaxy';
 let currentLevel = 'easy';
@@ -36,10 +36,11 @@ let score = 0;
 let lives = 3;
 let highScore = localStorage.getItem('dxball_highscore') || 0;
 let leaderboard = JSON.parse(localStorage.getItem('adArcadeLeaderboard')) || [];
+let levelIndex = 0;
+let paddle, balls, bricks, powerUps;
 
-function saveLeaderboard() {
-  localStorage.setItem('adArcadeLeaderboard', JSON.stringify(leaderboard));
-}
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 // === DOM Elements ===
 const loginScreen = document.getElementById('loginScreen');
@@ -49,17 +50,28 @@ const leaderboardPanel = document.getElementById('leaderboardPanel');
 const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
 const leaderboardList = document.getElementById('leaderboardList');
 
-// === Start Game ===
+// === Leaderboard Logic ===
+function saveLeaderboard() {
+  localStorage.setItem('adArcadeLeaderboard', JSON.stringify(leaderboard));
+}
+
+function renderLeaderboard() {
+  leaderboardList.innerHTML = '';
+  const sorted = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
+  sorted.forEach((entry, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `#${i + 1} <strong>${entry.name}</strong> — ${entry.score} pts [${entry.theme}]`;
+    leaderboardList.appendChild(li);
+  });
+}
+
+// === UI Events ===
 startGameBtn.addEventListener('click', () => {
   const nameInput = document.getElementById('playerName').value.trim();
-  if (!nameInput) {
-    alert("Please enter your name.");
-    return;
-  }
+  if (!nameInput) return alert("Please enter your name.");
   playerName = nameInput;
   currentTheme = document.getElementById('themeSelect').value;
   currentLevel = document.getElementById('levelSelect').value;
-
   document.body.className = currentTheme;
 
   loginScreen.classList.add('hidden');
@@ -71,10 +83,9 @@ startGameBtn.addEventListener('click', () => {
 
   initGame(currentLevel);
   updateUI();
-  draw(); // Starts the main game loop (in Part 2)
+  draw(); // Begin game loop
 });
 
-// === View Leaderboard ===
 viewLeaderboardBtn.addEventListener('click', () => {
   leaderboardPanel.classList.remove('hidden');
   renderLeaderboard();
@@ -83,22 +94,12 @@ viewLeaderboardBtn.addEventListener('click', () => {
 closeLeaderboardBtn.addEventListener('click', () => {
   leaderboardPanel.classList.add('hidden');
 });
-
-function renderLeaderboard() {
-  leaderboardList.innerHTML = '';
-  const sorted = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
-  sorted.forEach((entry, i) => {
-    const li = document.createElement('li');
-    li.innerHTML = `#${i + 1} <strong>${entry.name}</strong> — ${entry.score} pts [${entry.theme}]`;
-    leaderboardList.appendChild(li);
-  });
-}
-// === Game Objects ===
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-let paddle, balls, bricks, powerUps, levelIndex = 0;
-const levelNames = ['easy', 'medium', 'hard']; // Cycle through levels
+// === Level Layouts ===
+const levels = {
+  easy:   [1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
+  medium: [1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0],
+  hard:   [1,1,1,1,1,1,1,1, 1,0,1,0,1,0,1,1, 1,1,0,1,0,1,1,1, 1,1,1,0,1,1,1,1, 1,1,1,1,1,1,1,1]
+};
 
 const brickConfig = {
   colCount: 8,
@@ -110,14 +111,9 @@ const brickConfig = {
   offsetLeft: 35
 };
 
-const levels = {
-  easy:   [1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
-  medium: [1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1, 1,0,1,0,1,0,1,0],
-  hard:   [1,1,1,1,1,1,1,1, 1,0,1,0,1,0,1,1, 1,1,0,1,0,1,1,1, 1,1,1,0,1,1,1,1, 1,1,1,1,1,1,1,1]
-};
-
 const powerUpTypes = ["wide", "life", "slow", "multi", "fireball"];
 
+// === Game Setup ===
 function initGame(levelName) {
   score = 0;
   lives = 3;
@@ -151,24 +147,27 @@ function initGame(levelName) {
     for (let r = 0; r < brickConfig.rowCount; r++) {
       let idx = r * brickConfig.colCount + c;
       bricks[c][r] = {
-        x: 0, y: 0,
+        x: 0,
+        y: 0,
         status: layout[idx],
-        hp: 1 // For multi-hit logic later
+        hp: 1
       };
     }
   }
 
+  // Intro Text
   document.getElementById("introText").style.display = "block";
   setTimeout(() => {
     document.getElementById("introText").style.display = "none";
   }, 2500);
 }
+
+// === Scoreboard Update ===
 function updateUI() {
   document.getElementById("score").textContent = score;
   document.getElementById("lives").textContent = lives;
   document.getElementById("highscore").textContent = highScore;
 }
-
 // === Game Loop ===
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -202,7 +201,7 @@ function draw() {
     }
   }
 
-  // Power-ups
+  // Power-Ups
   powerUps.forEach((p, i) => {
     ctx.beginPath();
     ctx.arc(p.x, p.y, 10, 0, Math.PI * 2);
@@ -237,6 +236,7 @@ function draw() {
     ball.x += ball.dx;
     ball.y += ball.dy;
 
+    // Wall
     if (ball.x < ball.radius || ball.x > canvas.width - ball.radius) ball.dx *= -1;
     if (ball.y < ball.radius) ball.dy *= -1;
 
@@ -265,7 +265,6 @@ function draw() {
           score++;
           updateUI();
 
-          // Booster drop chance
           if (Math.random() < 0.1) {
             const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
             const colorMap = {
@@ -279,6 +278,7 @@ function draw() {
       }
     }
 
+    // Fall
     if (ball.y > canvas.height) ball.active = false;
   });
 
@@ -289,71 +289,30 @@ function draw() {
     if (lives <= 0) {
       endGame();
     } else {
-      balls.push({ x: canvas.width / 2, y: canvas.height - 30, dx: 4, dy: -4, radius: 10, active: true });
+      balls.push({
+        x: canvas.width / 2,
+        y: canvas.height - 30,
+        dx: 4,
+        dy: -4,
+        radius: 10,
+        active: true
+      });
     }
   }
 
-  // Paddle movement
+  // Paddle move
   if (paddle.movingRight && paddle.x < canvas.width - paddle.width) paddle.x += paddle.dx;
   if (paddle.movingLeft && paddle.x > 0) paddle.x -= paddle.dx;
 
-  // Check level complete
+  // Level complete
   const allBricksBroken = bricks.flat().every(b => b.status === 0);
   if (allBricksBroken) {
-    levelIndex = (levelIndex + 1) % levelNames.length;
-    currentLevel = levelNames[levelIndex];
+    levelIndex = (levelIndex + 1) % Object.keys(levels).length;
+    currentLevel = Object.keys(levels)[levelIndex];
     initGame(currentLevel);
   }
 
   requestAnimationFrame(draw);
-}
-// === Keyboard Controls for Paddle ===
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") paddle.movingRight = true;
-  if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") paddle.movingLeft = true;
-});
-
-document.addEventListener("keyup", e => {
-  if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") paddle.movingRight = false;
-  if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") paddle.movingLeft = false;
-});
-
-// === Touch Controls for Mobile ===
-document.getElementById("leftBtn").addEventListener("touchstart", () => paddle.movingLeft = true);
-document.getElementById("leftBtn").addEventListener("touchend", () => paddle.movingLeft = false);
-document.getElementById("rightBtn").addEventListener("touchstart", () => paddle.movingRight = true);
-document.getElementById("rightBtn").addEventListener("touchend", () => paddle.movingRight = false);
-
-// === Tilt Controls (Mobile Gyroscope) ===
-document.getElementById("enableTilt").addEventListener("click", () => {
-  if (
-    typeof DeviceOrientationEvent !== 'undefined' &&
-    typeof DeviceOrientationEvent.requestPermission === 'function'
-  ) {
-    DeviceOrientationEvent.requestPermission().then(state => {
-      if (state === 'granted') {
-        window.addEventListener("deviceorientation", handleTilt);
-      } else {
-        alert("Tilt denied by user.");
-      }
-    }).catch(console.error);
-  } else {
-    window.addEventListener("deviceorientation", handleTilt);
-  }
-});
-
-function handleTilt(e) {
-  const tilt = e.gamma;
-  if (tilt > 10) {
-    paddle.movingRight = true;
-    paddle.movingLeft = false;
-  } else if (tilt < -10) {
-    paddle.movingLeft = true;
-    paddle.movingRight = false;
-  } else {
-    paddle.movingLeft = false;
-    paddle.movingRight = false;
-  }
 }
 
 // === Power-Up Effects ===
@@ -389,9 +348,7 @@ function activatePowerUp(type) {
 // === End Game ===
 function endGame() {
   alert("😢 Game Over");
-  if (score > highScore) {
-    localStorage.setItem('dxball_highscore', score);
-  }
+  if (score > highScore) localStorage.setItem('dxball_highscore', score);
 
   leaderboard.push({
     name: playerName,
@@ -403,4 +360,51 @@ function endGame() {
   leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
   saveLeaderboard();
   location.reload();
+}
+
+// === Paddle Controls ===
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === "d") paddle.movingRight = true;
+  if (e.key === "ArrowLeft" || e.key === "a") paddle.movingLeft = true;
+});
+
+document.addEventListener("keyup", e => {
+  if (e.key === "ArrowRight" || e.key === "d") paddle.movingRight = false;
+  if (e.key === "ArrowLeft" || e.key === "a") paddle.movingLeft = false;
+});
+
+document.getElementById("leftBtn").addEventListener("touchstart", () => paddle.movingLeft = true);
+document.getElementById("leftBtn").addEventListener("touchend", () => paddle.movingLeft = false);
+document.getElementById("rightBtn").addEventListener("touchstart", () => paddle.movingRight = true);
+document.getElementById("rightBtn").addEventListener("touchend", () => paddle.movingRight = false);
+
+document.getElementById("enableTilt").addEventListener("click", () => {
+  if (
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof DeviceOrientationEvent.requestPermission === 'function'
+  ) {
+    DeviceOrientationEvent.requestPermission().then(state => {
+      if (state === 'granted') {
+        window.addEventListener("deviceorientation", handleTilt);
+      } else {
+        alert("Tilt denied.");
+      }
+    }).catch(console.error);
+  } else {
+    window.addEventListener("deviceorientation", handleTilt);
+  }
+});
+
+function handleTilt(e) {
+  const tilt = e.gamma;
+  if (tilt > 10) {
+    paddle.movingRight = true;
+    paddle.movingLeft = false;
+  } else if (tilt < -10) {
+    paddle.movingLeft = true;
+    paddle.movingRight = false;
+  } else {
+    paddle.movingLeft = false;
+    paddle.movingRight = false;
+  }
 }
