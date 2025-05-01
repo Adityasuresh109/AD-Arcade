@@ -1,4 +1,3 @@
-
 // === Starfield Background ===
 const starCanvas = document.getElementById("stars");
 const starCtx = starCanvas.getContext("2d");
@@ -79,7 +78,6 @@ viewLeaderboardBtn.addEventListener('click', () => {
 closeLeaderboardBtn.addEventListener('click', () => {
   leaderboardPanel.classList.add('hidden');
 });
-
 // === Leaderboard ===
 function renderLeaderboard() {
   leaderboardList.innerHTML = '';
