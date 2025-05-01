@@ -1,1 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AD Arcade 🎮</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  </style>
+</head>
+<body>
+  <!-- Parallax Starfield Background -->
+  <canvas id="stars"></canvas>
+
+  <!-- Start Menu -->
+  <div id="startScreen">
+    <h1>🎮 AD ARCADE</h1>
+    <p>Select your theme and level to begin!</p>
+
+    <label for="themeSelect">🎨 Theme:</label>
+    <select id="themeSelect">
+      <option value="galaxy" selected>🌌 Galaxy</option>
+      <option value="neon">🧠 Neon Grid</option>
+      <option value="ice">❄️ Ice Crystal</option>
+      <option value="inferno">🔥 Inferno</option>
+    </select>
+
+    <label for="levelSelect">🧱 Level:</label>
+    <select id="levelSelect">
+      <option value="easy" selected>Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+
+    <button id="startGameBtn">🚀 Start Game</button>
+  </div>
+
+  <!-- Game UI -->
+  <h2 id="gameTitle">AD Arcade - DX-Ball Revival</h2>
+  <div id="scoreboard">
+    Score: <span id="score">0</span> |
+    Lives: <span id="lives">3</span> |
+    High Score: <span id="highscore">0</span>
+  </div>
+
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+  <!-- Controls -->
+  <div class="mobile-controls">
+    <button id="leftBtn">◀️</button>
+    <button id="rightBtn">▶️</button>
+    <button id="enableTilt">📱 Enable Tilt</button>
+  </div>
+
+  <!-- Intro Text -->
+  <div id="introText">GET READY</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
