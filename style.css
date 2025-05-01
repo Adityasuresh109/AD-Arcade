@@ -3,13 +3,13 @@
 body {
   margin: 0;
   font-family: 'Press Start 2P', monospace;
+  background: black;
   overflow: hidden;
   text-align: center;
-  background-color: black;
   color: white;
 }
 
-/* === BACKGROUND CANVAS === */
+/* === CANVAS BACKGROUND === */
 #stars {
   position: fixed;
   z-index: -2;
@@ -17,54 +17,85 @@ body {
   height: 100vh;
 }
 
-/* === PANELS (Login, Leaderboard, Booster Legend) === */
+/* === PANELS (LOGIN, LEADERBOARD) === */
 .panel {
   position: absolute;
   top: 10%;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.85);
-  border: 3px solid var(--glow, #0ff);
-  padding: 20px;
+  padding: 20px 30px;
+  border: 3px solid var(--glow);
   border-radius: 10px;
-  box-shadow: 0 0 15px var(--glow, #0ff);
+  box-shadow: 0 0 15px var(--glow);
   z-index: 3;
-  max-width: 320px;
+  max-width: 300px;
 }
 
-.panel h1, .panel h2, .panel h3 {
-  margin-bottom: 10px;
-  color: var(--glow, #0ff);
-  text-shadow: 0 0 8px var(--glow, #0ff);
-  font-size: 14px;
-}
-
-.panel label, .panel select, .panel input {
+.panel input, .panel select, .panel button {
   display: block;
-  margin: 8px auto;
-  font-size: 11px;
-}
-
-.panel input, .panel select {
-  padding: 5px;
-  background: #000;
-  color: var(--glow, #0ff);
-  border: 2px solid var(--glow, #0ff);
-  border-radius: 5px;
+  margin: 10px auto;
   font-family: inherit;
+  font-size: 12px;
+  background: #000;
+  color: var(--glow);
+  border: 2px solid var(--glow);
+  padding: 5px 10px;
+  border-radius: 8px;
   text-align: center;
 }
 
 .panel button {
-  font-size: 11px;
-  margin-top: 10px;
-  padding: 8px 12px;
-  background-color: #000;
-  color: var(--glow, #0ff);
-  border: 2px solid var(--glow, #0ff);
-  border-radius: 10px;
-  box-shadow: 0 0 8px var(--glow, #0ff);
   cursor: pointer;
+  box-shadow: 0 0 8px var(--glow);
+}
+
+/* === SCOREBOARD & TITLE === */
+#gameTitle {
+  font-size: 14px;
+  margin: 10px 0;
+  text-shadow: 0 0 6px white;
+}
+
+#scoreboard {
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 5px white;
+}
+
+/* === CANVAS === */
+#gameCanvas {
+  border: 3px solid white;
+  box-shadow: 0 0 20px var(--glow);
+  background: transparent;
+}
+
+/* === COUNTDOWN OVERLAY === */
+#countdownOverlay {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: white;
+  text-shadow: 0 0 20px yellow;
+  z-index: 10;
+  animation: scaleIn 0.7s ease-in-out;
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translate(-50%, -50%);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1) translate(-50%, -50%);
+  }
 }
 
 /* === LEADERBOARD === */
@@ -78,22 +109,8 @@ body {
 
 #leaderboardPanel li {
   margin: 5px 0;
-  color: var(--glow, #0ff);
-  text-shadow: 0 0 4px var(--glow, #0ff);
-}
-
-/* === SCOREBOARD === */
-#scoreboard {
-  font-size: 12px;
-  text-shadow: 0 0 4px white;
-  margin-bottom: 10px;
-}
-
-/* === GAME CANVAS === */
-#gameCanvas {
-  border: 3px solid white;
-  box-shadow: 0 0 20px white;
-  background: transparent;
+  color: var(--glow);
+  text-shadow: 0 0 3px var(--glow);
 }
 
 /* === MOBILE CONTROLS === */
@@ -106,49 +123,13 @@ body {
   margin: 0 5px;
   padding: 10px 15px;
   background: #111;
-  color: #0ff;
-  border: 2px solid #0ff;
+  color: var(--glow);
+  border: 2px solid var(--glow);
   border-radius: 10px;
-  box-shadow: 0 0 8px #0ff;
+  box-shadow: 0 0 8px var(--glow);
 }
 
-/* === COUNTDOWN OVERLAY === */
-#countdownOverlay {
-  font-size: 48px;
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-shadow: 0 0 20px yellow, 0 0 40px orange;
-  animation: fadeScale 3s ease-out forwards;
-  z-index: 5;
-}
-
-@keyframes fadeScale {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-  20% { opacity: 1; transform: translate(-50%, -50%) scale(1.4); }
-  80% { opacity: 1; }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-}
-
-/* === BOOSTER COLORS === */
-.booster-icon {
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  margin: 0 4px;
-  box-shadow: 0 0 6px white;
-}
-
-.booster-wide     { background: gold; }
-.booster-life     { background: limegreen; }
-.booster-slow     { background: cyan; }
-.booster-multi    { background: magenta; }
-.booster-fireball { background: red; }
-
-/* === TOGGLE UTILS === */
+/* === VISIBILITY === */
 .hidden {
   display: none !important;
 }
