@@ -1,157 +1,113 @@
+/* style.css */
+:root {
+    --neon-cyan: #0ff;
+    --neon-pink: #f0f;
+    --icy-blue: #7af;
+    --flame-orange: #f90;
+    --matrix-green: #0f0;
+}
 
-/* === GENERAL === */
 body {
-  margin: 0;
-  font-family: 'Press Start 2P', monospace;
-  background: black;
-  overflow: hidden;
-  text-align: center;
-  color: white;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Press Start 2P', cursive;
+    background: #000;
 }
 
-/* === CANVAS === */
-#gameCanvas, #stars {
-  position: relative;
-  z-index: 1;
-  display: block;
-  margin: 0 auto;
-  background-color: #000;
+/* Theme Backgrounds */
+.galaxy-theme {
+    background: radial-gradient(circle, #000428 0%, #004e92 100%);
 }
 
-/* === PANELS === */
-.panel {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.85);
-  padding: 20px;
-  border: 3px solid var(--glow);
-  border-radius: 12px;
-  box-shadow: 0 0 20px var(--glow);
-  z-index: 2;
+.neon-grid-theme {
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 255, 0, 0.1) 3px,
+            rgba(0, 255, 0, 0.1) 6px
+        ),
+        #0f0f23;
 }
 
-.panel input, .panel select, .panel button {
-  margin: 10px auto;
-  padding: 10px;
-  font-family: inherit;
-  font-size: 12px;
-  border-radius: 8px;
-  background-color: black;
-  color: var(--glow);
-  border: 2px solid var(--glow);
-  display: block;
+.ice-realm-theme {
+    background: linear-gradient(45deg, #e0f6ff 0%, #b0e0e6 100%);
 }
 
-.panel button {
-  cursor: pointer;
-  box-shadow: 0 0 10px var(--glow);
+.inferno-theme {
+    background: linear-gradient(45deg, #3a0000 0%, #8b0000 100%);
 }
 
-/* === MODAL === */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right:0;
-  bottom:0;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
+#gameCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
-.modal-content {
-  background: #111;
-  border: 3px solid var(--glow);
-  padding: 30px;
-  text-align: center;
-  box-shadow: 0 0 20px var(--glow);
-  border-radius: 10px;
+#game-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
 }
 
-.modal button {
-  margin-top: 20px;
+/* HUD Styles */
+#hud {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: #fff;
+    text-shadow: 0 0 10px var(--neon-cyan);
 }
 
-/* === COUNTDOWN === */
-#countdownOverlay {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 48px;
-  font-weight: bold;
-  z-index: 9;
-  animation: fadePulse 0.7s ease-in-out;
-  color: white;
-  text-shadow: 0 0 15px yellow;
+.hud-item {
+    margin-bottom: 15px;
+    font-size: 0.8rem;
 }
 
-@keyframes fadePulse {
-  0% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1.3); }
-  100% { opacity: 0; transform: scale(1); }
+/* Mobile Controls */
+#mobile-controls {
+    position: fixed;
+    bottom: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
-/* === SCOREBOARD === */
-#scoreboard {
-  font-size: 12px;
-  margin-bottom: 8px;
-  text-shadow: 0 0 5px white;
+.mobile-btn {
+    pointer-events: auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 24px;
+    touch-action: manipulation;
+    user-select: none;
+    box-shadow: 0 0 15px var(--neon-cyan);
 }
 
-/* === MOBILE CONTROLS === */
-.mobile-controls {
-  margin-top: 10px;
-  user-select: none;
+/* Countdown Animation */
+#countdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    color: #fff;
+    text-shadow: 0 0 30px var(--neon-cyan);
+    opacity: 0;
+    animation: pulseText 1s infinite;
 }
 
-.mobile-controls button {
-  font-size: 24px;
-  margin: 0 10px;
-  padding: 12px;
-  background: #111;
-  color: var(--glow);
-  border: 2px solid var(--glow);
-  border-radius: 10px;
-  box-shadow: 0 0 10px var(--glow);
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-}
-
-/* === THEMES === */
-body.galaxy {
-  --glow: cyan;
-  --paddle-color: #00f2ff;
-  --brick-color: #3399ff;
-  --ball-color: #0ff;
-}
-
-body.neon {
-  --glow: magenta;
-  --paddle-color: #ff00ff;
-  --brick-color: #00ffff;
-  --ball-color: #fff;
-}
-
-body.ice {
-  --glow: lightblue;
-  --paddle-color: #ccf;
-  --brick-color: #aaf;
-  --ball-color: #eef;
-}
-
-body.inferno {
-  --glow: orange;
-  --paddle-color: #ff3300;
-  --brick-color: #ff6600;
-  --ball-color: #ffcc00;
-}
-
-/* === VISIBILITY === */
-.hidden {
-  display: none !important;
+@keyframes pulseText {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.2); }
+    100% { transform: translate(-50%, -50%) scale(1); }
 }
