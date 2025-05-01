@@ -1,27 +1,30 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DX-Ball Legendary Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>DX-Ball Legendary Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="galaxy-theme">
-    <div id="hud">
-        <div>SCORE: <span id="score">0</span></div>
-        <div>LIVES: <span id="lives">3</span></div>
-        <div>LEVEL: <span id="level">1</span></div>
-    </div>
-    
-    <canvas id="gameCanvas"></canvas>
-    
-    <div id="mobile-controls">
-        <button class="mobile-btn left">◀</button>
-        <button class="mobile-btn right">▶</button>
-    </div>
-
-    <script src="script.js"></script>
+<body class="galaxy">
+  <div id="theme-switcher">
+    <button data-theme="galaxy">Galaxy</button>
+    <button data-theme="neon">Neon Grid</button>
+    <button data-theme="ice">Ice Realm</button>
+    <button data-theme="inferno">Inferno</button>
+  </div>
+  <div id="hud">
+    <span id="score">00000</span>
+    <span id="lives">♥♥♥</span>
+    <span id="level">1</span>
+  </div>
+  <canvas id="game"></canvas>
+  <div id="mobile-controls">
+    <button class="mobile-btn left">◀</button>
+    <button class="mobile-btn right">▶</button>
+  </div>
+  <div id="countdown"></div>
+  <script src="script.js"></script>
 </body>
 </html>
