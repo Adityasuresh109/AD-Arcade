@@ -52,6 +52,16 @@ const loginScreen         = document.getElementById('loginScreen'),
       leaderboardPanel    = document.getElementById('leaderboardPanel'),
       closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn'),
       leaderboardList     = document.getElementById('leaderboardList');
+// === Instructions Panel Listeners ===
+const viewInstructionsBtn  = document.getElementById('viewInstructionsBtn');
+const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+
+viewInstructionsBtn.addEventListener('click', () => {
+  document.getElementById('instructionsPanel').classList.remove('hidden');
+});
+closeInstructionsBtn.addEventListener('click', () => {
+  document.getElementById('instructionsPanel').classList.add('hidden');
+});
 
 // === Leaderboard Helpers ===
 function saveLeaderboard() {
