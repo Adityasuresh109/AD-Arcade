@@ -8,7 +8,7 @@ body {
   color: white;
 }
 
-/* === CANVAS BACKGROUND LAYER === */
+/* === CANVAS BACKGROUND === */
 #stars {
   position: fixed;
   z-index: -2;
@@ -140,7 +140,7 @@ body {
   box-shadow: 0 0 8px #0ff;
 }
 
-/* === VISIBILITY TOGGLERS === */
+/* === TOGGLE CLASSES === */
 .hidden {
   display: none !important;
 }
