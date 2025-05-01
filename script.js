@@ -307,6 +307,54 @@ function draw() {
 
   requestAnimationFrame(draw);
 }
+// === Keyboard Controls for Paddle ===
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") paddle.movingRight = true;
+  if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") paddle.movingLeft = true;
+});
+
+document.addEventListener("keyup", e => {
+  if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") paddle.movingRight = false;
+  if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") paddle.movingLeft = false;
+});
+
+// === Touch Controls for Mobile ===
+document.getElementById("leftBtn").addEventListener("touchstart", () => paddle.movingLeft = true);
+document.getElementById("leftBtn").addEventListener("touchend", () => paddle.movingLeft = false);
+document.getElementById("rightBtn").addEventListener("touchstart", () => paddle.movingRight = true);
+document.getElementById("rightBtn").addEventListener("touchend", () => paddle.movingRight = false);
+
+// === Tilt Controls (Mobile Gyroscope) ===
+document.getElementById("enableTilt").addEventListener("click", () => {
+  if (
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof DeviceOrientationEvent.requestPermission === 'function'
+  ) {
+    DeviceOrientationEvent.requestPermission().then(state => {
+      if (state === 'granted') {
+        window.addEventListener("deviceorientation", handleTilt);
+      } else {
+        alert("Tilt denied by user.");
+      }
+    }).catch(console.error);
+  } else {
+    window.addEventListener("deviceorientation", handleTilt);
+  }
+});
+
+function handleTilt(e) {
+  const tilt = e.gamma;
+  if (tilt > 10) {
+    paddle.movingRight = true;
+    paddle.movingLeft = false;
+  } else if (tilt < -10) {
+    paddle.movingLeft = true;
+    paddle.movingRight = false;
+  } else {
+    paddle.movingLeft = false;
+    paddle.movingRight = false;
+  }
+}
 
 // === Power-Up Effects ===
 function activatePowerUp(type) {
