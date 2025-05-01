@@ -10,10 +10,10 @@
 </head>
 <body class="galaxy"> <!-- Default theme -->
 
-  <!-- 🌌 Dynamic Background Layer -->
+  <!-- 🌌 Galaxy Background -->
   <canvas id="stars"></canvas>
 
-  <!-- 🔐 LOGIN & SETTINGS -->
+  <!-- 🔐 Login + Settings -->
   <div id="loginScreen" class="panel">
     <h1>🎮 AD ARCADE</h1>
     <p>Enter your name and choose your journey</p>
@@ -40,14 +40,14 @@
     <button id="viewLeaderboardBtn">🏆 View Leaderboard</button>
   </div>
 
-  <!-- 🏆 LEADERBOARD PANEL -->
+  <!-- 🏆 Leaderboard -->
   <div id="leaderboardPanel" class="panel hidden">
     <h2>🏆 Top 10 Legends</h2>
     <ul id="leaderboardList"></ul>
     <button id="closeLeaderboardBtn">❌ Close</button>
   </div>
 
-  <!-- 🎮 GAME TITLE + SCOREBAR -->
+  <!-- 🎮 Score & Game UI -->
   <h2 id="gameTitle" class="hidden">AD Arcade - DX-Ball Revival</h2>
   <div id="scoreboard" class="hidden">
     <strong><span id="currentPlayer">Player</span></strong> |
@@ -56,20 +56,20 @@
     High Score: <span id="highscore">0</span>
   </div>
 
-  <!-- 🎯 MAIN GAME CANVAS -->
+  <!-- 🕹️ Game Canvas -->
   <canvas id="gameCanvas" width="800" height="600" class="hidden"></canvas>
 
-  <!-- 📱 MOBILE CONTROLS -->
+  <!-- 📱 Mobile Controls -->
   <div class="mobile-controls hidden">
     <button id="leftBtn">◀️</button>
     <button id="rightBtn">▶️</button>
     <button id="enableTilt">📱 Enable Tilt</button>
   </div>
 
-  <!-- 🎬 Intro Prompt -->
+  <!-- 🎬 Intro Text -->
   <div id="introText">GET READY</div>
 
-  <!-- 🚀 JS ENGINE -->
+  <!-- 🧠 Game Engine -->
   <script src="script.js"></script>
 </body>
 </html>
