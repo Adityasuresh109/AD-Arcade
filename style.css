@@ -1,5 +1,5 @@
 
-/* === BASE === */
+/* === BASE & NO SELECTION FOR BUTTONS === */
 body {
   margin: 0;
   font-family: 'Press Start 2P', monospace;
@@ -7,6 +7,14 @@ body {
   overflow: hidden;
   text-align: center;
   color: white;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* === CANVAS BACKGROUND === */
@@ -17,7 +25,7 @@ body {
   height: 100vh;
 }
 
-/* === PANELS (LOGIN, LEADERBOARD) === */
+/* === PANELS (LOGIN, LEADERBOARD, GAME OVER) === */
 .panel {
   position: absolute;
   top: 10%;
@@ -32,22 +40,24 @@ body {
   max-width: 300px;
 }
 
-.panel input, .panel select, .panel button {
-  display: block;
-  margin: 10px auto;
-  font-family: inherit;
-  font-size: 12px;
-  background: #000;
-  color: var(--glow);
-  border: 2px solid var(--glow);
-  padding: 5px 10px;
-  border-radius: 8px;
-  text-align: center;
+#gameOverModal {
+  top: 40%;
+  transform: translate(-50%, -50%);
 }
 
-.panel button {
+/* === BUTTON STYLING === */
+.panel button, .mobile-controls button {
   cursor: pointer;
   box-shadow: 0 0 8px var(--glow);
+}
+
+/* === GAME OVER MODAL SPECIFIC === */
+#gameOverModal {
+  display: none; /* hidden by default */
+}
+
+#gameOverModal.visible {
+  display: block;
 }
 
 /* === SCOREBOARD & TITLE === */
@@ -84,18 +94,9 @@ body {
 }
 
 @keyframes scaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translate(-50%, -50%);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2) translate(-50%, -50%);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1) translate(-50%, -50%);
-  }
+  0% { opacity: 0; transform: scale(0.8) translate(-50%, -50%); }
+  50% { opacity: 1; transform: scale(1.2) translate(-50%, -50%); }
+  100% { opacity: 0; transform: scale(1) translate(-50%, -50%); }
 }
 
 /* === LEADERBOARD === */
