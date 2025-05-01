@@ -119,3 +119,97 @@ if (musicToggle) {
 } else {
   bgMusic.pause();
 }
+// === Power-Up Effects ===
+function activatePowerUp(type) {
+  if (type === "wide") {
+    paddle.width = 150;
+    setTimeout(() => paddle.width = 100, 10000);
+  }
+  if (type === "life") {
+    lives++;
+    updateUI();
+  }
+  if (type === "slow") {
+    balls.forEach(b => { b.dx *= 0.5; b.dy *= 0.5; });
+    setTimeout(() => balls.forEach(b => { b.dx *= 2; b.dy *= 2; }), 10000);
+  }
+  if (type === "multi") {
+    if (balls.length < 3) {
+      const base = balls[0];
+      balls.push({
+        x: base.x, y: base.y,
+        dx: -base.dx, dy: -base.dy,
+        radius: 10, active: true, stuck: false
+      });
+    }
+  }
+  if (type === "fireball") {
+    balls.forEach(b => b.fire = true);
+    setTimeout(() => balls.forEach(b => delete b.fire), 5000);
+  }
+}
+
+// === Game Over ===
+function endGame() {
+  alert("😢 Game Over");
+  if (score > highScore) localStorage.setItem('dxball_highscore', score);
+
+  leaderboard.push({
+    name: playerName,
+    score,
+    theme: currentTheme,
+    date: new Date().toLocaleDateString()
+  });
+
+  leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
+  saveLeaderboard();
+  location.reload();
+}
+
+// === Paddle Controls ===
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === "d") paddle.movingRight = true;
+  if (e.key === "ArrowLeft" || e.key === "a") paddle.movingLeft = true;
+});
+document.addEventListener("keyup", e => {
+  if (e.key === "ArrowRight" || e.key === "d") paddle.movingRight = false;
+  if (e.key === "ArrowLeft" || e.key === "a") paddle.movingLeft = false;
+});
+
+// === Touch Controls ===
+document.getElementById("leftBtn").addEventListener("touchstart", () => paddle.movingLeft = true);
+document.getElementById("leftBtn").addEventListener("touchend", () => paddle.movingLeft = false);
+document.getElementById("rightBtn").addEventListener("touchstart", () => paddle.movingRight = true);
+document.getElementById("rightBtn").addEventListener("touchend", () => paddle.movingRight = false);
+
+// === Tilt Controls ===
+document.getElementById("enableTilt").addEventListener("click", () => {
+  if (
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof DeviceOrientationEvent.requestPermission === 'function'
+  ) {
+    DeviceOrientationEvent.requestPermission().then(state => {
+      if (state === 'granted') {
+        window.addEventListener("deviceorientation", handleTilt);
+      } else {
+        alert("Tilt permission denied.");
+      }
+    }).catch(console.error);
+  } else {
+    window.addEventListener("deviceorientation", handleTilt);
+  }
+});
+
+function handleTilt(e) {
+  const tilt = e.gamma;
+  if (tilt > 10) {
+    paddle.movingRight = true;
+    paddle.movingLeft = false;
+  } else if (tilt < -10) {
+    paddle.movingLeft = true;
+    paddle.movingRight = false;
+  } else {
+    paddle.movingLeft = false;
+    paddle.movingRight = false;
+  }
+}
