@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD ARCADE — Aditya's Party Games</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background:#07070f; color:#f2f2f7; min-height:100vh;
+    background-image:
+      radial-gradient(600px 300px at 15% 0%, rgba(255,45,120,.12), transparent 60%),
+      radial-gradient(700px 350px at 85% 10%, rgba(0,229,255,.10), transparent 60%),
+      radial-gradient(500px 400px at 50% 100%, rgba(160,107,255,.10), transparent 60%);
+  }
+  .wrap { max-width:1080px; margin:0 auto; padding:32px 20px 64px; }
+  header { text-align:center; margin-bottom:12px; }
+  .logo { font-size:64px; }
+  h1 {
+    font-size:clamp(40px, 7vw, 68px); letter-spacing:4px; font-weight:900;
+    background:linear-gradient(90deg,#ff2d78,#ffb300,#00e5ff,#a06bff);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    margin:8px 0 4px;
+  }
+  .sub { color:#a7a7b8; font-size:17px; margin-bottom:28px; }
+  .how { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:36px; }
+  .step {
+    background:#12121e; border:1px solid #26263a; border-radius:14px;
+    padding:12px 18px; font-size:15px; color:#d7d7e2;
+  }
+  .step b { color:#fff; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:22px; }
+  .card {
+    --ac:#00e5ff;
+    position:relative; background:#101018; border-radius:20px; padding:26px 24px 24px;
+    border:1px solid #26263a; border-top:3px solid var(--ac);
+    box-shadow:0 0 0 rgba(0,0,0,0); transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 40px -12px var(--ac); }
+  .badge {
+    position:absolute; top:16px; right:16px; font-size:11px; font-weight:800; letter-spacing:1.5px;
+    padding:5px 10px; border-radius:999px; background:var(--ac); color:#07070f;
+  }
+  .g-emoji { font-size:44px; margin-bottom:8px; }
+  .card h2 { font-size:24px; margin-bottom:8px; }
+  .tagline { color:#b9b9c9; font-size:15px; line-height:1.5; margin-bottom:14px; min-height:66px; }
+  .meta { display:flex; flex-direction:column; gap:6px; font-size:13.5px; color:#8e8ea3; margin-bottom:18px; }
+  .qr-wrap { text-align:center; margin-bottom:16px; }
+  .qr { width:168px; height:168px; border-radius:12px; border:6px solid #fff; background:#fff; }
+  .qr-cap { margin-top:8px; font-size:13px; color:#8e8ea3; letter-spacing:1px; text-transform:uppercase; }
+  .play {
+    display:block; text-align:center; text-decoration:none; font-weight:800; font-size:18px;
+    color:#07070f; background:var(--ac); border-radius:14px; padding:14px;
+  }
+  .play:active { transform:scale(.98); }
+  .soon { text-align:center; padding:26px 0 10px; }
+  .soon-big { font-size:52px; margin-bottom:10px; }
+  .soon-txt { color:#8e8ea3; font-size:15px; line-height:1.6; }
+  footer { text-align:center; margin-top:48px; color:#55556a; font-size:13px; }
+  footer b { color:#8e8ea3; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🕹️</div>
+    <h1>AD ARCADE</h1>
+    <p class="sub">Aditya's party game collection — pick a game, scan the code, play.</p>
+  </header>
+  <div class="how">
+    <div class="step"><b>1.</b> Pick a game below</div>
+    <div class="step"><b>2.</b> Scan its QR on the big screen</div>
+    <div class="step"><b>3.</b> Play — no apps to install</div>
+  </div>
+  <div class="grid">
+
+    <article class="card" style="--ac:#ff2d78">
+      <div class="badge">LIVE</div>
+      <div class="g-emoji">🕵️</div>
+      <h2>Mafia Night</h2>
+      <p class="tagline">The classic game of lies and deduction. No apps, no setup — just your phone's browser.</p>
+      <div class="meta">
+        <span>👥 1 host + 7–30 phones</span>
+        <span>🎮 One phone hosts, everyone else joins</span>
+      </div>
+      
+        <div class="qr-wrap">
+          <img class="qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXIAAAFyAQAAAADAX2ykAAAC0klEQVR4nO2cQW6kMBBFX43Zg5QDzFHMDeascwM4Sg4wEiwjgf4sygYym1ZrCGmk8gJBeIsv/ZTLVTZt4pkx/ngKh+CDD/5L+dnK6FnN+vrGzMwYu3JnZs01eoI/mU+SJAGpzNZjtxpZC+T3BrIkabpKT/Dn8UhTKtbmCSgmpy0v1xd5StLwavqDf46XtKCh/TBpSpK0fKue4M/lrZ/NrJ8bn6RL1v0+PcH/H+/u7UWSmIE8gOXprcZuK2C+Qk/w5/OrL4+BJOtJgrlEbYlkMzPrrtIT/Hl8U4ITgHk1oASxDo/X6Qn+dH5uSoXbtxK0H14Jgz8u9e1VeoI/kfcFM1kL+1q51kygoZoMRH10P9691NBWk4d2wQ3NE3jnw+1uFf7ejkea6mWzVkMrL33dWm98hL835I8OZi141vXWpHaTtzh/Nf3BPxjV36TDnWddQAOp2B359458ybCbjRpI9XEqEzdZivx7T/7QfdRo3rXyi8afS2Pl3dqQhyv0BH8u38D8tlieOiMLDFYTfBi0SZZ/d268mN+W19Mf/INRt4lKGbRPzXjC3erf2B+8I18z7LT9YVta+XKr5uTIv7fka93DVv9yrJnKdjCUcin8vRnPYRt/XzBvTQ6/K92P8Pd+/Gao6iGs9tiJ9pH37Pxq+oN/MPY062NrYtWYTjr8C4S/N+MP5+tqa4O6Vj5MzdG/uin/aQcBShJ2a6XDIcqYn2/J1x3AesK51r/pUCQdG9Ovpj/4B6MkVyhtZo/fGrCw2x3596b89v3CXD5I8VM5PatVu1c78F+tJ/jzeN9fMEgLfpk7yO+Gxi4tBp8P2b2a/uCf4Vdj7JKsB6xnNW9saUqK78tuyTf/PHuwjh2IufPANtoPi/3BG/OlYdUe11d+oN0PVr43n/mv1hP8WXwD++Jp7mDsEtD+MY2/JhgNoF0ajd10gZ7gz+Utfp8h+OBvy/8FoI48l40g528AAAAASUVORK5CYII=" alt="QR code for Mafia Night">
+          <div class="qr-cap">Scan to join</div>
+        </div>
+        <a class="play" style="--ac:#ff2d78" href="https://ad-arcade-mafia-night.adityasuresh2110.workers.dev/" target="_blank" rel="noopener">▶&nbsp; Play now</a>
+    </article>
+
+    <article class="card" style="--ac:#ffb300">
+      <div class="badge">LIVE</div>
+      <div class="g-emoji">🤯</div>
+      <h2>The Great Indian WTF Quiz</h2>
+      <p class="tagline">18 questions, 3 rounds, pure chaos. Desi trivia meets WTF moments.</p>
+      <div class="meta">
+        <span>👥 Host laptop + up to 25 phones</span>
+        <span>🎮 Quiz runs on the host laptop, players buzz in on phones</span>
+      </div>
+      
+        <div class="qr-wrap">
+          <img class="qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACYklEQVR4nO2bQY7jIBBFfwWkXmIpB+ij4JtFc6S+gX2UvgHsQX8WBcS9GSUjuYOUYmE55i2+VKLqUxAhHhz75VESMNRQQy9AljZWANiX9hBZgD7lzxRg6DOoI0kSQBXEbw8ge5AJQCSpb3NoNRRoqweuVbGYqgDZQ1feeroAQ/8DrYJ9qYJ9cdSc+MsCDP3n8D9+OQJwRYAqjOn6CwIMfRolWQBkD7mxgBvG2gokt9MFGPrQ8ACqHL/ka5GYrpCYrsCuc+40AYY+gYLHUcAtFLTF1M2iju3lWg29qPXblyqy5mYM5ZYc1RgerMYMWt8cbZkwpgrun8ULICByFSAULwjVE/laJtBqKO75D5GlfYwk9ZuOYJlwCrRFiwngFlrfgkyOLUaBtGjNgh4aTIg9RjoT2dYbNziL1gzo0RNuGMFLTjOhecKpULSGbihoD2D0ct04/LK1NQXa65ZajVGjxqYr9gmL1gSoOgoNVEyub5GBo/OwaE2C9kwIdDMRChBTr2AIpQf05VoNbb2MmBzlpqdaH71ahQJu+aP3d2fQ+uaovxsMHrpMoehRisT7LZuXazV07IRb/lOXoalPAcfW2ni5VkN/9OATNCdq3drgho23ujUF2s0E0Nw6U4uRBip2x2jRmgD1AJxuigV5QXsLBRK/0LrxmiJfrtXQZiY0ZIHAvjpwX8exCVzBLs5OTGZAca9MuoR0q8VyqGDWg58SVS9Pypo9+GdBbz99213dKVDNhH1T5QjkZey8qiB+uYL9s5wmwNAn0ap33fWG2jq68c3GjxtRU2h9b1TsH0GGGnoK+heobs6nQ21lKgAAAABJRU5ErkJggg==" alt="QR code for The Great Indian WTF Quiz">
+          <div class="qr-cap">Scan to join</div>
+        </div>
+        <a class="play" style="--ac:#ffb300" href="https://cute-blini-564c95.netlify.app" target="_blank" rel="noopener">▶&nbsp; Play now</a>
+    </article>
+
+    <article class="card" style="--ac:#00e5ff">
+      <div class="badge">LIVE</div>
+      <div class="g-emoji">🧸</div>
+      <h2>Puppet Panic!</h2>
+      <p class="tagline">Your phone controls ONE body part of a puppet. 5 Olympic events. Maximum silliness.</p>
+      <div class="meta">
+        <span>👥 TV + 2–25 phones</span>
+        <span>🎮 TV shows the stage, phones are the controllers</span>
+      </div>
+      
+        <div class="qr-wrap">
+          <img class="qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXIAAAFyAQAAAADAX2ykAAAC80lEQVR4nO2cQY7bMAxFHysDWcpAD5CjKDcrejP7KLmBtQwg43chKckU7UyLZlwbIBdBEr3FBxhRJEXHxN/Y/OWvcHDeeec/lc/W7MJa30A2Yx6BeYS+Pmyjx/kX8khLkCSJpIKmWACCSAv0Baly0970O/8nfNuceYB0HdAEQCzYJQ/ULX7ZUI/zr+KHnz5bmoTBaoIgm8ewqR7nP5MP0pQHNEWJ2cx6uP5Pepz/V77u30eRZMSbiTwUS1oH0nUoEAXkLfQ4/3r+njUDpOtJ9m0ByCfZBWA2M7NxKz3Ov46vGXKzhRqaa3yuFp8Bz58PyOehVbiXWCBde/0LoTq5V8cb6XH+5Xzdtd/HIIgSaQnSFG8tZhMLtXraqX7nf2st7gLNtWrx+Slmawl9YW/6nf/AqvPaOyAt902sQu1paQFq9bQ3/c5/YJIKmuhehaD2XbznXFAR9+/R+N5/Xrg7NNxT596OTv0n4P49Gt+jsh5ZVTuE60ep0D3t5+/x+H64xh6k0xKeXZv6qudXR+VrQQR2iTeD/mJWy6WCptxvl/ao3/n3rEfge1W08JQwt5wrFlr03pt+5z+wnj93awG5Z1rpTXbt/j0gn0/qbeaCvp97r2o+36ytstqD/2w9zr+Qf6qPqB2M2LZzr5SCHk0s379H45+6Vr0h2bKqZm/LJffvwfi+L3sGVb+beOP4el3o5+8B+T5/lU9iHjHBOhhxwdJUBtok1jqQpi30OP9avvq3OhRCgTyi+WKI/FVWVxkQ+WvZn37nP+RjuyGSltXMzqrzOWbjWi/5pSW0SZ096nf+PeupMzzXuves+dGz9PP3qHx/foE8YN90szba3hlNrEa6en/yeHw/fwkFCMXIYx+XjcLSMtbWhuqk+970O/++/fz8guazmrtnA5FB5BHbRo/zn8ynqxlJN6sxex6DzM7tkv8A+p3/Bf+4xqc9pHJSH5K9H70b6nH+Vfyb/Hm5t676/FVFJp/fOCpv/v8Mzjt/WP4H1HpIdcdzGgEAAAAASUVORK5CYII=" alt="QR code for Puppet Panic!">
+          <div class="qr-cap">Scan to join</div>
+        </div>
+        <a class="play" style="--ac:#00e5ff" href="https://adityasuresh109.github.io/Puppet-Panic/play.html" target="_blank" rel="noopener">▶&nbsp; Play now</a>
+    </article>
+  </div>
+  <footer>Built for game nights 🥂 &nbsp;·&nbsp; <b>AD ARCADE</b> — more games loading…</footer>
+</div>
+</body>
+</html>
